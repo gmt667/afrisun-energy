@@ -295,7 +295,7 @@ export default function Home() {
                   >
                     <img
                       src={c.image}
-                      alt="Illustrative solar energy application"
+                      alt={`${c.name} — illustrative product category`}
                       loading="lazy"
                     />
                     <div className="category-top">

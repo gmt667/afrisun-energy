@@ -24,7 +24,13 @@ The map uses real boundaries projected with D3's Natural Earth projection **at p
 
 To regenerate, download `https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson` into `.cache-map/countries.geojson`, then run `node scripts/prepare-map.mjs`. The original cached download is ignored. Natural Earth data is public domain: https://www.naturalearthdata.com/about/terms-of-use/ .
 
-Only verified/public market records are interactive. The approved Sandton headquarters is the fallback. Headquarters, distribution, retail and planned expansion have different fills/patterns and labels. Plans are explicitly described as plans. The map does not invent coordinates or mark Polokwane/other cities as existing hubs. Country buttons provide touch access for small countries; SVG controls support Enter, Space and arrow-key navigation. Region filters can legitimately show no published presence.
+The company branch network was supplied and approved by the user on 15 November 2026: South Africa (Sandton headquarters), Malawi (Lilongwe and Blantyre), Zambia (Lusaka), Mozambique, Tanzania, Kenya and Nigeria. `shared/branches.json` stores this network independently of optional CMS market records. Animated connection curves originate in South Africa. Named-city coordinates are approximate city centres; other countries use projected geographic centroids and do not imply an office address. Lines represent company connections, not shipping routes. Regenerate map data with `node scripts/prepare-map.mjs` after changing the branch file.
+
+Additional CMS market records require verification/publication. Headquarters, branches, distribution, retail and planned expansion retain distinct labels; plans remain explicitly labelled. Country controls provide touch access and SVG controls support Enter, Space and arrow-key navigation. Region filters also filter the branch connections and can legitimately show no presence.
+
+## Branding and scroll motion
+
+The header, footer and admin use the supplied corporate logo. Section headings, content grids, editorial imagery and the map enter with staggered scroll reveals. Connections draw as the map enters view. Content remains readable without animation; reduced-motion preferences disable scroll reveals and decorative pin/scroll-cue animation. Product pages include a responsive photographic category gallery; no stock, pricing or manufacturer partnership is fabricated.
 
 ## Stories, testimonials and videos
 

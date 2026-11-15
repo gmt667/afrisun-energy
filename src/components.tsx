@@ -24,12 +24,13 @@ import type { Content } from "../shared/schemas";
 export function Logo() {
   return (
     <Link to="/" aria-label="Afrisun Energy home" className="logo">
-      <span className="logo-mark">
-        <Sun size={32} strokeWidth={1.6} />
-      </span>
-      <span>
-        AFRISUN<span className="logo-energy">ENERGY</span>
-      </span>
+      <img
+        src="/images/afrisun-logo.webp"
+        alt="Afrisun Energy — Powering Africa’s Future"
+        width="600"
+        height="200"
+        fetchPriority="high"
+      />
     </Link>
   );
 }

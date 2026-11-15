@@ -70,7 +70,7 @@ Unit/API tests verify publication rules, input validation, origin/CSRF checks, p
 
 `scripts/verify-database.ts` exercises real authentication, publication/unpublication, scheduling filters, uploads, all three enquiry types, permissions, exports, auditing and session revocation. Set both `DATABASE_URL` and `TEST_DATABASE_URL` to the **same disposable test database**, migrate it, then run `npx tsx scripts/verify-database.ts`. External email is explicitly disabled in that verification script. Never point it at a production database.
 
-The supplied illustrative impact, footprint, named partner stories and external headlines are seeded as **unverified demonstration drafts**. They cannot publish without changing both flags and obtaining business approval. In particular, the supplied SKU ratio and fulfilment claims need reconciliation. The public footprint starts with the approved Sandton headquarters only; public partner stories remain hidden until verified records exist.
+The supplied illustrative impact, named partner stories and external headlines are seeded as **unverified demonstration drafts**. They cannot publish without changing both flags and obtaining business approval. In particular, the supplied SKU ratio and fulfilment claims need reconciliation. The public footprint shows the company branch network supplied on 15 November 2026, connecting South Africa to Malawi, Zambia, Mozambique, Tanzania, Kenya and Nigeria. Public partner stories remain hidden until verified records exist.
 
 See [deployment instructions](docs/DEPLOYMENT.md), [asset provenance](docs/ASSETS.md) and [verification record](docs/VERIFICATION.md).
 

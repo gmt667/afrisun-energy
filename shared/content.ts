@@ -13,14 +13,14 @@ export const categories = [
     description:
       "Monocrystalline, bifacial and high-efficiency photovoltaic modules.",
     icon: "Sun",
-    image: "/images/solar-detail.webp",
+    image: "/images/products/solar-panels.webp",
   },
   {
     slug: "inverters",
     name: "Solar inverters",
     description: "Hybrid, off-grid and grid-tied conversion systems.",
     icon: "Zap",
-    image: "/images/solar-rooftop.webp",
+    image: "/images/products/solar-inverter.webp",
   },
   {
     slug: "energy-storage",
@@ -28,21 +28,21 @@ export const categories = [
     description:
       "Lithium battery systems for residential and commercial applications.",
     icon: "Battery",
-    image: "/images/solar-aerial.webp",
+    image: "/images/products/energy-storage.webp",
   },
   {
     slug: "solar-lighting",
     name: "Solar lighting",
     description: "Streetlights, floodlights and home lighting kits.",
     icon: "Lightbulb",
-    image: "/images/solar-detail.webp",
+    image: "/images/products/solar-lighting.webp",
   },
   {
     slug: "water-pumping",
     name: "Solar water pumping",
     description: "Solar pumps and controllers for water access and irrigation.",
     icon: "Droplets",
-    image: "/images/solar-aerial.webp",
+    image: "/images/products/water-pumping.webp",
   },
   {
     slug: "accessories",

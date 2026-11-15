@@ -76,6 +76,37 @@ export function Catalogue({ articles = false }: { articles?: boolean }) {
       />
       <section className="section">
         <div className="container">
+          {!articles && !params.get("q") && !params.get("page") && (
+            <div
+              className="category-gallery"
+              aria-label="Explore product categories"
+            >
+              {categories
+                .filter((category) => !selected || category.slug === selected)
+                .map((category) => (
+                  <Link
+                    key={category.slug}
+                    to={`/products?category=${category.slug}`}
+                    className="category-gallery-card"
+                  >
+                    <div>
+                      <img
+                        src={category.image}
+                        alt={`${category.name} — illustrative category photograph`}
+                        loading="lazy"
+                        width="640"
+                        height="480"
+                      />
+                    </div>
+                    <span>
+                      <h2>{category.name}</h2>
+                      <ArrowUpRight size={20} />
+                    </span>
+                    <p>{category.description}</p>
+                  </Link>
+                ))}
+            </div>
+          )}
           <form
             className="catalogue-toolbar"
             onSubmit={(e) => e.preventDefault()}
@@ -193,7 +224,25 @@ export function Catalogue({ articles = false }: { articles?: boolean }) {
             <p className="fine-print">
               Category suggestions describe potential sourcing interests, not
               confirmed inventory. Only verified, published products appear in
-              the catalogue.
+              the catalogue. Illustrative photography: Pexels (Elite Power Group
+              / Kindel Media); solar-powered pump by{" "}
+              <a
+                href="https://commons.wikimedia.org/wiki/File:Solar-powered_pump.jpg"
+                target="_blank"
+                rel="noreferrer"
+              >
+                James Emery
+              </a>
+              ,{" "}
+              <a
+                href="https://creativecommons.org/licenses/by/2.0/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                CC BY 2.0
+              </a>{" "}
+              (resized and converted to WebP). Photography does not imply
+              supplier or installer affiliation.
             </p>
           )}
           {loading ? (

@@ -10,6 +10,8 @@ import {
 } from "../shared/enhancements";
 import countries from "../shared/africa-countries.json" with { type: "json" };
 import type { Content } from "../shared/schemas";
+import branches from "../shared/branches.json";
+import { motion, useReducedMotion } from "motion/react";
 type Boundary = { code: string; name: string; region: string; path: string };
 type Market = {
   id: string;
@@ -30,6 +32,7 @@ const hq: Market = {
   },
 };
 export function Footprint() {
+  const reduced = useReducedMotion();
   const { data, error } = useApi<{ items: Content[] }>(
     "/api/content?kind=market&limit=100",
     { items: [] },
@@ -37,7 +40,18 @@ export function Footprint() {
   const { data: map, error: mapError } = useApi<{
     viewBox: string;
     countries: Boundary[];
-  }>("/maps/africa.json", { viewBox: "0 0 640 580", countries: [] });
+    branches?: {
+      code: string;
+      name: string;
+      city?: string;
+      point: number[];
+      approximate: boolean;
+    }[];
+  }>("/maps/africa.json", {
+    viewBox: "0 0 640 580",
+    countries: [],
+    branches: [],
+  });
   const [region, setRegion] = useState("All regions");
   const [selected, setSelected] = useState("ZAF");
   const [hovered, setHovered] = useState("");
@@ -59,6 +73,22 @@ export function Footprint() {
         : [];
     });
   const markets = [...verified];
+  for (const branch of branches.filter(
+    (b, i, all) =>
+      b.code !== "ZAF" && all.findIndex((a) => a.code === b.code) === i,
+  )) {
+    markets.push({
+      id: `company-branch-${branch.code}`,
+      title: branch.name,
+      description: "Connected to our South African headquarters.",
+      body: "Contact our team for branch enquiries and local support.",
+      market: {
+        countryCode: branch.code,
+        type: "distribution",
+        locations: branch.locations,
+      },
+    });
+  }
   if (
     !markets.some(
       (x) => x.market.countryCode === "ZAF" && x.market.type === "headquarters",
@@ -95,9 +125,9 @@ export function Footprint() {
             </h2>
           </div>
           <p>
-            Explore our approved presence.
+            One connected African network.
             <br />
-            New markets appear only after verification.
+            South African roots. Local connections across the continent.
           </p>
         </div>
         <div
@@ -177,7 +207,7 @@ export function Footprint() {
                             role: "button",
                             tabIndex: 0,
                             "aria-pressed": currentCode === country.code,
-                            "aria-label": `${country.name}: ${records.map((x) => marketLabels[x.market.type]).join(", ")}`,
+                            "aria-label": `${country.name}: ${records.map((x) => (x.id.startsWith("company-branch-") ? "Branch" : marketLabels[x.market.type])).join(", ")}`,
                             onClick: () => choose(country.code),
                             onFocus: () => setHovered(country.code),
                             onKeyDown: (e: KeyboardEvent<SVGPathElement>) => {
@@ -231,6 +261,96 @@ export function Footprint() {
                     </path>
                   );
                 })}
+                <g
+                  className="branch-connections"
+                  aria-hidden="true"
+                  pointerEvents="none"
+                >
+                  {(map.branches || [])
+                    .filter((b) => b.code !== "ZAF" && codes.includes(b.code))
+                    .map((branch, i) => {
+                      const origin = map.branches?.find(
+                        (b) => b.code === "ZAF",
+                      )?.point;
+                      if (!origin) return null;
+                      const [x, y] = branch.point;
+                      const [ox, oy] = origin;
+                      const curve = `M ${ox} ${oy} Q ${Math.min(ox, x) - 42} ${(oy + y) / 2} ${x} ${y}`;
+                      return (
+                        <g key={`${branch.code}-${branch.city || i}`}>
+                          <path className="branch-route-base" d={curve} />
+                          <motion.path
+                            className="branch-route"
+                            d={curve}
+                            initial={false}
+                            whileInView={
+                              reduced
+                                ? {}
+                                : { pathLength: [0, 1], opacity: [0.2, 1] }
+                            }
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.5, delay: i * 0.13 }}
+                          />
+                          <circle
+                            className="branch-pin-halo"
+                            cx={x}
+                            cy={y}
+                            r="7"
+                          />
+                          <circle className="branch-pin" cx={x} cy={y} r="3" />
+                          <text
+                            className="branch-city-label"
+                            x={
+                              x +
+                              (branch.city === "Lusaka" || branch.code === "MOZ"
+                                ? -9
+                                : 10)
+                            }
+                            y={
+                              y +
+                              (branch.code === "MOZ"
+                                ? 25
+                                : branch.city === "Blantyre"
+                                  ? 15
+                                  : -11)
+                            }
+                            textAnchor={
+                              branch.city === "Lusaka" || branch.code === "MOZ"
+                                ? "end"
+                                : "start"
+                            }
+                          >
+                            {branch.city || branch.name}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  {(map.branches || [])
+                    .filter((b) => b.code === "ZAF")
+                    .map((branch) => (
+                      <g key="headquarters">
+                        <circle
+                          className="hq-pin-halo"
+                          cx={branch.point[0]}
+                          cy={branch.point[1]}
+                          r="11"
+                        />
+                        <circle
+                          className="hq-pin"
+                          cx={branch.point[0]}
+                          cy={branch.point[1]}
+                          r="4.5"
+                        />
+                        <text
+                          className="branch-city-label"
+                          x={branch.point[0] + 12}
+                          y={branch.point[1] + 5}
+                        >
+                          South Africa · HQ
+                        </text>
+                      </g>
+                    ))}
+                </g>
               </svg>
             )}
             <div className="map-tooltip" aria-hidden="true">
@@ -254,7 +374,7 @@ export function Footprint() {
               {Object.entries(marketLabels).map(([type, label]) => (
                 <span key={type}>
                   <i className={`legend-${type}`} />
-                  {label}
+                  {type === "distribution" ? "Branches / distribution" : label}
                 </span>
               ))}
             </div>
@@ -267,8 +387,9 @@ export function Footprint() {
               >
                 Natural Earth, 1:50m
               </a>
-              . Generalised country and territory outlines; no exact hub
-              positions or geopolitical endorsement implied.
+              . Lines show branch connections, not transport routes. City
+              markers are approximate; country-level markers do not indicate
+              street addresses.
             </p>
           </div>
           <div className="africa-panel">
@@ -302,7 +423,9 @@ export function Footprint() {
                         className={`presence-label label-${item.market.type}`}
                       >
                         <MapPin size={14} />
-                        {marketLabels[item.market.type]}
+                        {item.id.startsWith("company-branch-")
+                          ? "Branch"
+                          : marketLabels[item.market.type]}
                       </span>
                       <h4>{item.market.locations}</h4>
                       <p>{item.description}</p>
@@ -341,8 +464,8 @@ export function Footprint() {
             </div>
             {error && (
               <p className="fine-print" role="status">
-                Market updates are temporarily unavailable. The approved Sandton
-                headquarters is shown.
+                Additional market updates are temporarily unavailable. Our
+                company branch network is shown.
               </p>
             )}
           </div>
