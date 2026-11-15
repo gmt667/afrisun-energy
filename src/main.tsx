@@ -18,6 +18,8 @@ import {
 } from "./components";
 import { SEO } from "./seo";
 import "./styles.css";
+import "./enhancements.css";
+import { Newsletter, NewsletterAction } from "./Newsletter";
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() =>
   import("./pages/CompanyPages").then((m) => ({ default: m.About })),
@@ -46,6 +48,7 @@ const SiteSearch = lazy(() =>
 const Contact = lazy(() => import("./pages/Contact"));
 const Legal = lazy(() => import("./pages/Legal"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Story = lazy(() => import("./pages/Story"));
 function Layout() {
   const { pathname } = useLocation();
   return (
@@ -57,6 +60,7 @@ function Layout() {
       <main id="main" key={pathname}>
         <Outlet />
       </main>
+      <Newsletter />
       <Footer />
       <ScrollTools />
     </>
@@ -105,6 +109,11 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="insights" element={<Catalogue articles />} />
                 <Route path="insights/:slug" element={<Detail article />} />
                 <Route path="partners" element={<Partners />} />
+                <Route path="stories/:slug" element={<Story />} />
+                <Route
+                  path="newsletter/:action"
+                  element={<NewsletterAction />}
+                />
                 <Route path="contact" element={<Contact />} />
                 <Route path="privacy" element={<Legal />} />
                 <Route path="cookies" element={<Legal cookies />} />

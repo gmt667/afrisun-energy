@@ -130,7 +130,15 @@ export const goals = [
   "Contribute measurably to SDG 7 and Mission 300 by expanding energy access.",
   "Improve livelihoods through better health, education, security, productivity and income.",
 ];
+export const insightTopics = [
+  { slug: "solar-storage", label: "Solar & Storage" },
+  { slug: "finance-policy", label: "Finance & Policy" },
+  { slug: "grid-energy-access", label: "Grid & Energy Access" },
+];
 export const articleCategories = [
+  "Solar & Storage",
+  "Finance & Policy",
+  "Grid & Energy Access",
   "Renewable Energy News",
   "Solar Technology",
   "Energy Access in Africa",

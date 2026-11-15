@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  detailsSchema,
+  emptyDetails,
+  validatePublishedDetails,
+} from "./enhancements";
 const text = (max = 200) =>
   z.string().trim().min(1, "This field is required").max(max);
 export const enquirySchema = z
@@ -56,6 +61,9 @@ export const contentSchema = z
       "metric",
       "market",
       "case-study",
+      "network-partner",
+      "video-story",
+      "faq",
     ]),
     slug: text(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     title: text(200),
@@ -73,7 +81,10 @@ export const contentSchema = z
       .string()
       .regex(/^$|^\/media\/[a-f0-9-]+\.pdf$/)
       .default(""),
-    status: z.enum(["draft", "published", "archived"]).default("draft"),
+    status: z
+      .enum(["draft", "review", "published", "archived"])
+      .default("draft"),
+    details: detailsSchema.default(emptyDetails),
     availability: z
       .enum(["enquiry", "available", "unavailable", "on-order"])
       .default("enquiry"),
@@ -94,6 +105,12 @@ export const contentSchema = z
   })
   .superRefine((value, ctx) => {
     if (value.status === "published") {
+      validatePublishedDetails(value.kind, value.details, ctx);
+      if (value.kind === "faq" && (!value.body || !value.details.faq))
+        ctx.addIssue({
+          code: "custom",
+          message: "Published FAQs require an answer and category",
+        });
       if (value.demo || !value.verified)
         ctx.addIssue({
           code: "custom",
@@ -120,4 +137,6 @@ export type Content = ContentInput & {
   id: string;
   createdAt: string;
   updatedAt: string;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
 };

@@ -18,9 +18,11 @@ import {
 } from "../components";
 import { SEO } from "../seo";
 import { useApi, formatDate, readingTime } from "../lib";
-import { categories } from "../../shared/content";
+import { categories, insightTopics } from "../../shared/content";
 import type { Content } from "../../shared/schemas";
 import { EnquiryForm } from "../forms";
+import { SourceReference } from "../ContentDetails";
+import { detailsOf } from "../../shared/enhancements";
 type Listing = { items: Content[]; total: number; page: number };
 export function Catalogue({ articles = false }: { articles?: boolean }) {
   const [params, setParams] = useSearchParams();
@@ -102,6 +104,17 @@ export function Catalogue({ articles = false }: { articles?: boolean }) {
                 onChange={(e) => change("category", e.target.value)}
               >
                 <option value="">All categories</option>
+                {articles &&
+                  insightTopics
+                    .filter(
+                      (topic) =>
+                        !cmsCategories.items.some((c) => c.slug === topic.slug),
+                    )
+                    .map((topic) => (
+                      <option key={topic.slug} value={topic.slug}>
+                        {topic.label}
+                      </option>
+                    ))}
                 {cmsCategories.items.map((c) => (
                   <option key={c.id} value={c.slug}>
                     {c.title}
@@ -384,6 +397,12 @@ export function Detail({ article = false }: { article?: boolean }) {
             <p className="lead">{item.description}</p>
             <div className="article-byline">
               <span>By {item.author}</span>
+              {detailsOf(item).news && (
+                <span>
+                  Source: {detailsOf(item).news?.source} ·{" "}
+                  {detailsOf(item).news?.sourcePublishedAt}
+                </span>
+              )}
               {item.publishedAt && (
                 <time dateTime={item.publishedAt}>
                   {formatDate(item.publishedAt)}
@@ -399,6 +418,7 @@ export function Detail({ article = false }: { article?: boolean }) {
               />
             )}
             <Markdown>{item.body}</Markdown>
+            <SourceReference record={item} />
             <div className="share-links">
               <span>Share this perspective</span>
               <a

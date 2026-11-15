@@ -65,7 +65,9 @@ test("synthetic product detail and quote form UI", async ({ page }) => {
   await page
     .getByLabel("Message *")
     .fill("Synthetic product enquiry for UI verification only.");
-  await page.getByRole("checkbox").check();
+  await page
+    .getByRole("checkbox", { name: /I have read the privacy notice/ })
+    .check();
   await page.getByRole("button", { name: "Send Enquiry" }).click();
   await expect(
     page.getByRole("heading", { name: "Thank you for connecting." }),

@@ -22,6 +22,7 @@ services:
       SITE_URL: ${SITE_URL:?Set SITE_URL to canonical HTTPS origin}
       SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET}
       ENQUIRIES_ENABLED: ${ENQUIRIES_ENABLED:-false}
+      NEWSLETTER_ENABLED: ${NEWSLETTER_ENABLED:-false}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
       EMAIL_TO: ${EMAIL_TO:-Mfumu.kuseni@afrisun.za}

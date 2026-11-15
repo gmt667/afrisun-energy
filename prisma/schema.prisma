@@ -49,6 +49,9 @@ model Content {
   applications String @default("")
   warranty String @default("")
   order Int @default(0)
+  details Json @default("{}")
+  approvedBy String?
+  approvedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@unique([kind, slug])
@@ -89,4 +92,16 @@ model Audit {
   target String
   createdAt DateTime @default(now())
   @@index([createdAt])
+}
+model NewsletterSubscriber {
+  id String @id @default(cuid())
+  email String @unique
+  topics Json
+  status String @default("pending")
+  confirmationHash String? @unique
+  confirmationExpiresAt DateTime?
+  unsubscribeHash String? @unique
+  consentAt DateTime @default(now())
+  confirmedAt DateTime?
+  createdAt DateTime @default(now())
 }

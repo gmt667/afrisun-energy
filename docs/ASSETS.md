@@ -10,3 +10,5 @@ The user supplied four reference images in this session. Only the supplied aeria
 - Fonts: Manrope and Inter, SIL Open Font License; downloaded from Google Fonts for self-hosting. Keep their licence texts alongside fonts when distributing.
 
 **Public-launch requirement:** the user supplied these photographs for the design, but no licence or ownership evidence was provided. Confirm usage rights or replace with company-approved licensed photography before public release. This repository is not evidence of a licence. Do not imply that pictured workers are Afrisun employees or that installations are Afrisun projects.
+
+The enhanced Africa map uses public-domain Natural Earth 1:50m country/territory boundaries, with preparation-time D3 projection. Its generated JSON records the source checksum. See `docs/ENHANCEMENTS.md` for the exact source and regeneration procedure. No third-party institutional or fictional partner logos were added.

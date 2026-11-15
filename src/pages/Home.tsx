@@ -1,4 +1,8 @@
 import { Footprint, CaseStudies } from "../ImpactContent";
+import { ImpactDashboard } from "../ImpactDashboard";
+import { PartnerTicker } from "../PartnerTicker";
+import { VideoStories } from "../VideoStories";
+import { FrequentlyAskedQuestions } from "../FrequentlyAskedQuestions";
 import { Link } from "react-router-dom";
 import {
   ArrowUpRight,
@@ -440,8 +444,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <ImpactDashboard />
       <Footprint />
+      <PartnerTicker />
       <CaseStudies />
+      <VideoStories />
+      <FrequentlyAskedQuestions />
       <LatestInsights />
       <PartnershipCTA />
     </>

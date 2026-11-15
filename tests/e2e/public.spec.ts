@@ -31,7 +31,7 @@ test("public routes render without overflow or runtime errors", async ({
     if (path === "/")
       await page.screenshot({
         path: `test-results/home-${page.viewportSize()?.width}.png`,
-        fullPage: true,
+        fullPage: false,
       });
   }
   expect(errors).toEqual([]);

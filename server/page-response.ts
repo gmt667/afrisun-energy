@@ -5,6 +5,7 @@ import { db } from "./db.js";
 import { renderPublic } from "./render-public.js";
 import type { Content } from "../shared/schemas.js";
 import { company } from "../shared/content.js";
+import { publicContent } from "./public-content.js";
 
 const labels: Record<string, string> = {
   "/": "Powering Africa’s Future",
@@ -32,11 +33,16 @@ export async function pageResponse(req: Request, res: Response) {
   const origin = new URL(process.env.SITE_URL!).origin;
   const pathname = req.path;
   let item: Content | null = null;
-  const match = /^\/(products|insights)\/([a-z0-9-]+)$/.exec(pathname);
+  const match = /^\/(products|insights|stories)\/([a-z0-9-]+)$/.exec(pathname);
   if (match && process.env.DATABASE_URL) {
     const record = await db.content.findFirst({
       where: {
-        kind: match[1] === "products" ? "product" : "article",
+        kind:
+          match[1] === "products"
+            ? "product"
+            : match[1] === "stories"
+              ? "case-study"
+              : "article",
         slug: match[2],
         status: "published",
         verified: true,
@@ -44,11 +50,15 @@ export async function pageResponse(req: Request, res: Response) {
         OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
       },
     });
-    if (record) item = JSON.parse(JSON.stringify(record)) as Content;
+    if (record)
+      item = JSON.parse(JSON.stringify(publicContent(record))) as Content;
   }
   const known =
-    Object.hasOwn(labels, pathname) || !!item || pathname.startsWith("/admin");
-  const title = `${item?.seoTitle || item?.title || labels[pathname] || "Page not found"} | Afrisun Energy`;
+    Object.hasOwn(labels, pathname) ||
+    !!item ||
+    pathname.startsWith("/admin") ||
+    /^\/newsletter\/(confirm|unsubscribe)$/.test(pathname);
+  const title = `${item?.seoTitle || item?.title || labels[pathname] || (pathname.startsWith("/newsletter/") ? "Newsletter preferences" : "Page not found")} | Afrisun Energy`;
   const description =
     item?.seoDescription ||
     item?.description ||
@@ -63,7 +73,10 @@ export async function pageResponse(req: Request, res: Response) {
       `<meta name="description" content="${escape(description)}"/>`,
     );
   const noindex =
-    !known || pathname.startsWith("/admin") || pathname === "/search";
+    !known ||
+    pathname.startsWith("/admin") ||
+    pathname === "/search" ||
+    pathname.startsWith("/newsletter/");
   const metadata = `<link rel="canonical" href="${escape(url)}"/><meta name="robots" content="${noindex ? "noindex, nofollow" : "index, follow"}"/><meta property="og:title" content="${escape(title)}"/><meta property="og:description" content="${escape(description)}"/><meta property="og:url" content="${escape(url)}"/><meta property="og:image" content="${escape(image)}"/><meta property="og:type" content="${item?.kind === "article" ? "article" : "website"}"/><meta name="twitter:card" content="summary_large_image"/>`;
   html = html.replace("</head>", metadata + "</head>");
   const structured =
@@ -96,7 +109,7 @@ export async function pageResponse(req: Request, res: Response) {
         };
   html = html.replace(
     "</head>",
-    `<script type="application/ld+json">${JSON.stringify(structured).replaceAll("<", "\\u003c")}</script></head>`,
+    `<script id="afrisun-structured-data" type="application/ld+json">${JSON.stringify(structured).replaceAll("<", "\\u003c")}</script></head>`,
   );
   // Server-rendered public content is available to crawlers before client React mounts.
   html = html.replace(
