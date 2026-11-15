@@ -55,6 +55,7 @@ describe("API safety boundaries", () => {
       "/api/admin/enquiries",
       "/api/admin/users",
       "/api/admin/export",
+      "/api/admin/newsletter",
     ])
       expect((await request(createApp()).get(url)).status).toBe(401);
   });

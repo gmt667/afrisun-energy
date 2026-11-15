@@ -17,6 +17,7 @@ import {
   Users,
   Shield,
   MapPin,
+  Mail,
 } from "lucide-react";
 import { api, formatDate } from "../lib";
 import {
@@ -26,6 +27,10 @@ import {
 } from "../../shared/schemas";
 import { Markdown, Notice } from "../components";
 import { SEO } from "../seo";
+import { StructuredFields } from "../StructuredFields";
+import { StoryNarrative, SourceReference } from "../ContentDetails";
+import { detailsOf } from "../../shared/enhancements";
+import { insightTopics } from "../../shared/content";
 type User = {
   id: string;
   name: string;
@@ -75,6 +80,9 @@ const kinds = [
   "metric",
   "market",
   "case-study",
+  "network-partner",
+  "video-story",
+  "faq",
 ] as const;
 const blank: ContentInput = contentSchema.parse({
   kind: "product",
@@ -91,6 +99,16 @@ export default function Admin() {
   const [media, setMedia] = useState<Media[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [audits, setAudits] = useState<Audit[]>([]);
+  const [subscribers, setSubscribers] = useState<
+    {
+      id: string;
+      email: string;
+      topics: string[];
+      status: string;
+      consentAt: string;
+      confirmedAt: string | null;
+    }[]
+  >([]);
   const [stats, setStats] = useState<Record<string, number>>({});
   const [edit, setEdit] = useState<(ContentInput & { id?: string }) | null>(
     null,
@@ -125,6 +143,8 @@ export default function Admin() {
       else if (tab === "media") setMedia(await request("/api/admin/media"));
       else if (tab === "users") setUsers(await request("/api/admin/users"));
       else if (tab === "audit") setAudits(await request("/api/admin/audit"));
+      else if (tab === "newsletter")
+        setSubscribers(await request("/api/admin/newsletter"));
     } catch (e) {
       setError((e as Error).message);
     }
@@ -229,6 +249,11 @@ export default function Admin() {
         ) : (
           <input
             value={String(edit[name] ?? "")}
+            list={
+              name === "category" && edit.kind === "article"
+                ? "insight-categories"
+                : undefined
+            }
             onChange={(e) => setEdit({ ...edit, [name]: e.target.value })}
           />
         )}
@@ -246,12 +271,16 @@ export default function Admin() {
     ["metric", "Impact metrics", Sun],
     ["market", "Market footprint", MapPin],
     ["case-study", "Case studies", FileText],
+    ["network-partner", "Partner network ticker", Users],
+    ["video-story", "Video testimonials", Image],
+    ["faq", "Frequently asked questions", FileText],
     ["media", "Media library", Image],
     ...(session.user.role === "admin"
       ? [
           ["enquiries", "Enquiries", Inbox],
           ["users", "Users & permissions", Users],
           ["audit", "Audit log", Shield],
+          ["newsletter", "Newsletter subscribers", Mail],
         ]
       : []),
   ];
@@ -349,13 +378,62 @@ export default function Admin() {
             <h1>
               {edit.id ? "Edit" : "Create"} {edit.kind.replace("-", " ")}
             </h1>
+            <datalist id="insight-categories">
+              {insightTopics.map((topic) => (
+                <option value={topic.slug} key={topic.slug}>
+                  {topic.label}
+                </option>
+              ))}
+            </datalist>
             {preview ? (
               <article className="draft-preview">
                 <span className="status-badge">PRIVATE DRAFT PREVIEW</span>
                 <h1>{edit.title}</h1>
                 <p>{edit.description}</p>
                 {edit.image && <img src={edit.image} alt={edit.imageAlt} />}
-                <Markdown>{edit.body}</Markdown>
+                {edit.kind === "case-study" ? (
+                  <StoryNarrative record={edit} />
+                ) : (
+                  <Markdown>{edit.body}</Markdown>
+                )}
+                {edit.kind === "article" && <SourceReference record={edit} />}
+                {edit.kind === "metric" && detailsOf(edit).metric && (
+                  <div className="metric-private-preview">
+                    <h2>
+                      {detailsOf(edit).metric?.value ??
+                        "Value awaiting verification"}{" "}
+                      {detailsOf(edit).metric?.unit}
+                    </h2>
+                    <p>
+                      Measured: {detailsOf(edit).metric?.asOf || "Not supplied"}
+                    </p>
+                    <p>{detailsOf(edit).metric?.methodology}</p>
+                  </div>
+                )}
+                {edit.kind === "market" && (
+                  <p>
+                    {detailsOf(edit).market?.countryCode} ·{" "}
+                    {detailsOf(edit).market?.type} ·{" "}
+                    {detailsOf(edit).market?.locations}
+                  </p>
+                )}
+                {edit.kind === "network-partner" && (
+                  <p>{detailsOf(edit).network?.role} · Private preview only</p>
+                )}
+                {edit.kind === "video-story" && detailsOf(edit).video?.url && (
+                  <video controls preload="none" style={{ maxWidth: "100%" }}>
+                    <source src={detailsOf(edit).video?.url} type="video/mp4" />
+                    {detailsOf(edit).video?.captions && (
+                      <track
+                        kind="captions"
+                        src={detailsOf(edit).video?.captions}
+                        srcLang="en"
+                        label="English"
+                        default
+                      />
+                    )}
+                  </video>
+                )}
               </article>
             ) : (
               <>
@@ -482,24 +560,34 @@ export default function Admin() {
                         })
                       }
                     >
-                      {["draft", "published", "archived"].map((v) => (
+                      {(session.user.role === "admin"
+                        ? ["draft", "review", "published", "archived"]
+                        : ["draft", "review"]
+                      ).map((v) => (
                         <option key={v}>{v}</option>
                       ))}
                     </select>
                   </label>
                 </div>
+                <StructuredFields
+                  record={edit}
+                  onChange={(details) => setEdit({ ...edit, details })}
+                />
                 <div className="admin-checkboxes">
                   {(["verified", "demo", "featured"] as const).map((key) => (
                     <label className="consent" key={key}>
                       <input
                         type="checkbox"
                         checked={edit[key]}
+                        disabled={
+                          key === "verified" && session.user.role !== "admin"
+                        }
                         onChange={(e) =>
                           setEdit({ ...edit, [key]: e.target.checked })
                         }
                       />
                       {key === "verified"
-                        ? "Business owner has verified and approved this content"
+                        ? "Administrator: evidence checked and business owner approval confirmed"
                         : key === "demo"
                           ? "Demonstration record (cannot be published)"
                           : "Feature on homepage / listing"}
@@ -508,8 +596,10 @@ export default function Admin() {
                 </div>
                 <p className="fine-print">
                   Published, verified records become public on their publication
-                  date. Articles require an author, date and body. Draft and
-                  archived records remain private.
+                  date. Editors submit drafts for review; only administrators
+                  approve or publish. Approved records are protected from editor
+                  changes. Articles require an author, date and body. Draft,
+                  review and archived records remain private.
                 </p>
               </>
             )}
@@ -716,11 +806,12 @@ export default function Admin() {
                   }}
                 >
                   <label className="form-field">
-                    Image or datasheet (JPEG, PNG, WebP, PDF; max 10 MB)
+                    Images/PDF (10 MB), MP4 video (50 MB), or English WebVTT
+                    captions (1 MB)
                     <input
                       type="file"
                       name="file"
-                      accept="image/jpeg,image/png,image/webp,application/pdf"
+                      accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,text/vtt,.vtt"
                       required
                     />
                   </label>
@@ -866,6 +957,39 @@ export default function Admin() {
                         <td>{a.userId}</td>
                         <td>{a.target}</td>
                         <td>{formatDate(a.createdAt)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {tab === "newsletter" && (
+              <div className="admin-table-wrap">
+                <p>
+                  Only confirmed subscribers have opted in. Pending and
+                  unsubscribed addresses must not receive updates. Campaign
+                  sending is not enabled by this dashboard.
+                </p>
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Topics</th>
+                      <th>Status</th>
+                      <th>Confirmed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscribers.map((s) => (
+                      <tr key={s.id}>
+                        <td>{s.email}</td>
+                        <td>{s.topics.join(", ")}</td>
+                        <td>{s.status}</td>
+                        <td>
+                          {s.confirmedAt
+                            ? formatDate(s.confirmedAt)
+                            : "Awaiting confirmation"}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

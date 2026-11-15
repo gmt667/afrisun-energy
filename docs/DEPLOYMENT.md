@@ -7,7 +7,7 @@ Use a Node 22 container/service and a managed PostgreSQL 15+ database. Serve the
 1. Provision PostgreSQL with a least-privilege application account and encrypted connections.
 2. Configure production environment variables from `.env.example`: `NODE_ENV=production`, canonical HTTPS `SITE_URL`, `DATABASE_URL`, random `SESSION_SECRET`, and a persistent `UPLOAD_DIR`.
 3. Install with `npm ci`, run `npm run db:generate`, `npm run db:migrate`, `npm run build` and `npm start`.
-4. Configure a reverse proxy with HTTPS, request-body limit of 11 MB and the appropriate upstream port. Set `TRUST_PROXY=true` only with exactly one known, trusted proxy and block direct public access to Node. Otherwise keep it false.
+4. Configure a reverse proxy with HTTPS, a request-body limit of 51 MB (allowing multipart overhead for 50 MB video uploads) and the appropriate upstream port. The application retains separate limits of 10 MB for images/PDFs and 1 MB for captions. Set `TRUST_PROXY=true` only with exactly one known, trusted proxy and block direct public access to Node. Otherwise keep it false.
 5. Mount a persistent writable volume at `UPLOAD_DIR`. Back up both PostgreSQL and media; test restoration. The application must not run as root. The Dockerfile creates a non-root user.
 6. Create the first administrator via `npm run admin:create` in a secure maintenance environment. Clear `ADMIN_PASSWORD` afterwards.
 7. Review image rights, approved product/article data, legal documents and company ownership before making the site public.

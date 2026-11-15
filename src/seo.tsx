@@ -50,7 +50,10 @@ export function SEO({
       document.head.append(canonical);
     }
     canonical.href = url;
-    const script = document.createElement("script");
+    const script =
+      document.querySelector<HTMLScriptElement>("#afrisun-structured-data") ||
+      document.createElement("script");
+    script.id = "afrisun-structured-data";
     script.type = "application/ld+json";
     script.textContent = JSON.stringify(
       article
@@ -81,7 +84,7 @@ export function SEO({
             },
           },
     );
-    document.head.append(script);
+    if (!script.isConnected) document.head.append(script);
     return () => script.remove();
   }, [title, description, image, location.pathname, article, noindex]);
   return null;

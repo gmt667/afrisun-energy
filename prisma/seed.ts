@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { categories, articleCategories } from "../shared/content.js";
 import { proposedContent } from "./proposed-content.js";
+import { enhancementDrafts } from "./enhancement-drafts.js";
 const db = new PrismaClient();
 try {
   for (const [order, c] of categories.entries())
@@ -33,7 +34,7 @@ try {
         status: "draft",
       },
     });
-  for (const entry of proposedContent)
+  for (const entry of [...proposedContent, ...enhancementDrafts])
     await db.content.upsert({
       where: { kind_slug: { kind: entry.kind, slug: entry.slug } },
       update: {},

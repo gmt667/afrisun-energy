@@ -19,7 +19,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "admin:create": "tsx server/create-admin.ts",
-    "test:database": "tsx scripts/verify-database.ts",
+    "test:database": "tsx scripts/verify-database.ts && tsx scripts/verify-enhancements.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -48,6 +48,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^9.39.1",
     "@playwright/test": "^1.56.1",
     "@types/compression": "^1.8.1",
@@ -60,6 +61,7 @@
     "@types/supertest": "^6.0.3",
     "@vitejs/plugin-react": "^5.1.1",
     "concurrently": "^9.2.1",
+    "d3-geo": "^3.1.2",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^16.5.0",

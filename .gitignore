@@ -10,3 +10,4 @@ test-results/
 *.log
 .local-test-db/
 .npm-cache/
+.cache-map/

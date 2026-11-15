@@ -60,6 +60,17 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
               information, health information or other sensitive personal
               information.
             </p>
+            <h2>Optional newsletter updates</h2>
+            <p>
+              When enabled, newsletter signup stores your email address,
+              selected topics and consent timestamp. An email link must be
+              confirmed within 24 hours before the address becomes subscribed.
+              You can unsubscribe through the link in the confirmation email and
+              every future update. Tokens are stored as hashes. The email
+              provider processes the address to send confirmation. Enquiries do
+              not subscribe you to newsletters. Pending and unsubscribed records
+              remain subject to the company-approved retention policy.
+            </p>
             <h2>Why we use it</h2>
             <p>
               We use enquiry details to respond to your request, discuss

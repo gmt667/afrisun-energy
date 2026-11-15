@@ -1,0 +1,282 @@
+[
+  {
+    "code": "DZA",
+    "name": "Algeria",
+    "region": "North Africa"
+  },
+  {
+    "code": "AGO",
+    "name": "Angola",
+    "region": "Central Africa"
+  },
+  {
+    "code": "BEN",
+    "name": "Benin",
+    "region": "West Africa"
+  },
+  {
+    "code": "BWA",
+    "name": "Botswana",
+    "region": "Southern Africa"
+  },
+  {
+    "code": "BFA",
+    "name": "Burkina Faso",
+    "region": "West Africa"
+  },
+  {
+    "code": "BDI",
+    "name": "Burundi",
+    "region": "East Africa"
+  },
+  {
+    "code": "CMR",
+    "name": "Cameroon",
+    "region": "Central Africa"
+  },
+  {
+    "code": "CPV",
+    "name": "Cape Verde",
+    "region": "West Africa"
+  },
+  {
+    "code": "CAF",
+    "name": "Central African Republic",
+    "region": "Central Africa"
+  },
+  {
+    "code": "TCD",
+    "name": "Chad",
+    "region": "Central Africa"
+  },
+  {
+    "code": "COM",
+    "name": "Comoros",
+    "region": "East Africa"
+  },
+  {
+    "code": "COD",
+    "name": "Democratic Republic of the Congo",
+    "region": "Central Africa"
+  },
+  {
+    "code": "DJI",
+    "name": "Djibouti",
+    "region": "East Africa"
+  },
+  {
+    "code": "EGY",
+    "name": "Egypt",
+    "region": "North Africa"
+  },
+  {
+    "code": "GNQ",
+    "name": "Equatorial Guinea",
+    "region": "Central Africa"
+  },
+  {
+    "code": "ERI",
+    "name": "Eritrea",
+    "region": "East Africa"
+  },
+  {
+    "code": "SWZ",
+    "name": "Eswatini",
+    "region": "Southern Africa"
+  },
+  {
+    "code": "ETH",
+    "name": "Ethiopia",
+    "region": "East Africa"
+  },
+  {
+    "code": "GAB",
+    "name": "Gabon",
+    "region": "Central Africa"
+  },
+  {
+    "code": "GHA",
+    "name": "Ghana",
+    "region": "West Africa"
+  },
+  {
+    "code": "GIN",
+    "name": "Guinea",
+    "region": "West Africa"
+  },
+  {
+    "code": "GNB",
+    "name": "Guinea-Bissau",
+    "region": "West Africa"
+  },
+  {
+    "code": "CIV",
+    "name": "Ivory Coast",
+    "region": "West Africa"
+  },
+  {
+    "code": "KEN",
+    "name": "Kenya",
+    "region": "East Africa"
+  },
+  {
+    "code": "LSO",
+    "name": "Lesotho",
+    "region": "Southern Africa"
+  },
+  {
+    "code": "LBR",
+    "name": "Liberia",
+    "region": "West Africa"
+  },
+  {
+    "code": "LBY",
+    "name": "Libya",
+    "region": "North Africa"
+  },
+  {
+    "code": "MDG",
+    "name": "Madagascar",
+    "region": "East Africa"
+  },
+  {
+    "code": "MWI",
+    "name": "Malawi",
+    "region": "East Africa"
+  },
+  {
+    "code": "MLI",
+    "name": "Mali",
+    "region": "West Africa"
+  },
+  {
+    "code": "MRT",
+    "name": "Mauritania",
+    "region": "West Africa"
+  },
+  {
+    "code": "MUS",
+    "name": "Mauritius",
+    "region": "East Africa"
+  },
+  {
+    "code": "MAR",
+    "name": "Morocco",
+    "region": "North Africa"
+  },
+  {
+    "code": "MOZ",
+    "name": "Mozambique",
+    "region": "East Africa"
+  },
+  {
+    "code": "NAM",
+    "name": "Namibia",
+    "region": "Southern Africa"
+  },
+  {
+    "code": "NER",
+    "name": "Niger",
+    "region": "West Africa"
+  },
+  {
+    "code": "NGA",
+    "name": "Nigeria",
+    "region": "West Africa"
+  },
+  {
+    "code": "COG",
+    "name": "Republic of the Congo",
+    "region": "Central Africa"
+  },
+  {
+    "code": "RWA",
+    "name": "Rwanda",
+    "region": "East Africa"
+  },
+  {
+    "code": "STP",
+    "name": "São Tomé and Príncipe",
+    "region": "Central Africa"
+  },
+  {
+    "code": "SEN",
+    "name": "Senegal",
+    "region": "West Africa"
+  },
+  {
+    "code": "SYC",
+    "name": "Seychelles",
+    "region": "East Africa"
+  },
+  {
+    "code": "SLE",
+    "name": "Sierra Leone",
+    "region": "West Africa"
+  },
+  {
+    "code": "SOM",
+    "name": "Somalia",
+    "region": "East Africa"
+  },
+  {
+    "code": "SOL",
+    "name": "Somaliland",
+    "region": "East Africa"
+  },
+  {
+    "code": "ZAF",
+    "name": "South Africa",
+    "region": "Southern Africa"
+  },
+  {
+    "code": "SSD",
+    "name": "South Sudan",
+    "region": "East Africa"
+  },
+  {
+    "code": "SDN",
+    "name": "Sudan",
+    "region": "North Africa"
+  },
+  {
+    "code": "TZA",
+    "name": "Tanzania",
+    "region": "East Africa"
+  },
+  {
+    "code": "GMB",
+    "name": "The Gambia",
+    "region": "West Africa"
+  },
+  {
+    "code": "TGO",
+    "name": "Togo",
+    "region": "West Africa"
+  },
+  {
+    "code": "TUN",
+    "name": "Tunisia",
+    "region": "North Africa"
+  },
+  {
+    "code": "UGA",
+    "name": "Uganda",
+    "region": "East Africa"
+  },
+  {
+    "code": "ESH",
+    "name": "Western Sahara",
+    "region": "North Africa"
+  },
+  {
+    "code": "ZMB",
+    "name": "Zambia",
+    "region": "East Africa"
+  },
+  {
+    "code": "ZWE",
+    "name": "Zimbabwe",
+    "region": "East Africa"
+  }
+]

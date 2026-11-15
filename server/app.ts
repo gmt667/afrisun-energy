@@ -19,12 +19,21 @@ import multer from "multer";
 import sharp from "sharp";
 import { z } from "zod";
 import { db } from "./db.js";
+import type { Prisma } from "@prisma/client";
 import {
   contentSchema,
   enquirySchema,
   loginSchema,
+  type ContentInput,
 } from "../shared/schemas.js";
 import { company, navigation } from "../shared/content.js";
+import { detailsOf } from "../shared/enhancements.js";
+import { publicContent } from "./public-content.js";
+import {
+  newsletterRouter,
+  newsletterEnabled,
+  listSubscribers,
+} from "./newsletter.js";
 
 const production = process.env.NODE_ENV === "production";
 const origin = new URL(process.env.SITE_URL || "http://localhost:5173").origin;
@@ -53,6 +62,32 @@ const publicFilter = () => ({
 });
 const audit = (userId: string, action: string, target: string) =>
   db.audit.create({ data: { userId, action, target } });
+async function validateMedia(data: ContentInput, tx: Prisma.TransactionClient) {
+  if (data.status !== "published") return;
+  const video = detailsOf(data).video;
+  const references = [
+    { url: data.image, mime: "image/webp" },
+    { url: data.datasheet, mime: "application/pdf" },
+    ...(data.kind === "video-story" && video
+      ? [
+          { url: video.url, mime: "video/mp4" },
+          { url: video.captions, mime: "text/vtt" },
+        ]
+      : []),
+  ];
+  for (const reference of references.filter((x) => x.url)) {
+    const media = await tx.media.findFirst({
+      where: { url: reference.url, mime: reference.mime },
+    });
+    if (!media)
+      throw Object.assign(
+        new Error(
+          "Referenced media is missing or has the wrong type. Upload and review the asset before publication.",
+        ),
+        { status: 400 },
+      );
+  }
+}
 type Auth = { id: string; role: string; name: string; email: string };
 declare module "express-serve-static-core" {
   interface Locals {
@@ -142,6 +177,7 @@ export function createApp() {
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
   app.get("/api/config", (_req, res) =>
     res.json({
+      newsletterEnabled: newsletterEnabled(),
       enquiriesEnabled:
         Boolean(process.env.DATABASE_URL) &&
         process.env.ENQUIRIES_ENABLED === "true",
@@ -153,6 +189,7 @@ export function createApp() {
     const value = `${timestamp}.${nonce}`;
     res.json({ challenge: `${value}.${sign(value)}` });
   });
+  app.use("/api/newsletter", newsletterRouter());
   app.get("/api/content", async (req, res) => {
     if (!process.env.DATABASE_URL) {
       res.json({ items: [], total: 0, page: 1 });
@@ -169,6 +206,9 @@ export function createApp() {
         "metric",
         "market",
         "case-study",
+        "network-partner",
+        "video-story",
+        "faq",
       ])
       .parse(req.query.kind || "product");
     const q = z
@@ -226,16 +266,22 @@ export function createApp() {
         : {}),
       ...(req.query.featured === "true" ? { featured: true } : {}),
     };
+    const limit = z.coerce
+      .number()
+      .int()
+      .min(1)
+      .max(100)
+      .parse(req.query.limit || 12);
     const [items, total] = await Promise.all([
       db.content.findMany({
         where,
-        skip: (page - 1) * 12,
-        take: 12,
+        skip: (page - 1) * limit,
+        take: limit,
         orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
       }),
       db.content.count({ where }),
     ]);
-    res.json({ items, total, page });
+    res.json({ items: items.map(publicContent), total, page });
   });
   app.get("/api/facets", async (_req, res) => {
     if (!process.env.DATABASE_URL) {
@@ -286,7 +332,7 @@ export function createApp() {
       res.status(404).json({ error: "Content not found" });
       return;
     }
-    res.json(item);
+    res.json(publicContent(item));
   });
   app.post(
     "/api/enquiries",
@@ -482,12 +528,33 @@ export function createApp() {
   });
   app.post("/api/admin/content", async (req, res) => {
     const data = contentSchema.parse(req.body);
+    if (
+      res.locals.user.role !== "admin" &&
+      (data.verified || data.status === "published")
+    ) {
+      res.status(403).json({
+        error:
+          "Only administrators may approve or publish content. Save a draft or submit for review.",
+      });
+      return;
+    }
     const item = await db.$transaction(async (tx) => {
-      const item = await tx.content.create({ data });
+      await validateMedia(data, tx);
+      const item = await tx.content.create({
+        data: {
+          ...data,
+          approvedBy: data.verified ? res.locals.user.id : null,
+          approvedAt: data.verified ? new Date() : null,
+        },
+      });
       await tx.audit.create({
         data: {
           userId: res.locals.user.id,
-          action: "content.create",
+          action: data.verified
+            ? "content.approve.create"
+            : data.status === "review"
+              ? "content.submit-review"
+              : "content.create",
           target: item.id,
         },
       });
@@ -498,14 +565,41 @@ export function createApp() {
   app.put("/api/admin/content/:id", async (req, res) => {
     const data = contentSchema.parse(req.body);
     const item = await db.$transaction(async (tx) => {
+      const current = await tx.content.findUnique({
+        where: { id: req.params.id },
+      });
+      if (!current)
+        throw Object.assign(new Error("Content not found"), { status: 404 });
+      if (
+        res.locals.user.role !== "admin" &&
+        (data.verified ||
+          data.status === "published" ||
+          current.status === "published" ||
+          current.verified)
+      )
+        throw Object.assign(
+          new Error(
+            "Administrator approval is required to edit approved content. Ask an administrator to unpublish it for review.",
+          ),
+          { status: 403 },
+        );
+      await validateMedia(data, tx);
       const item = await tx.content.update({
         where: { id: req.params.id },
-        data,
+        data: {
+          ...data,
+          approvedBy: data.verified ? res.locals.user.id : null,
+          approvedAt: data.verified ? new Date() : null,
+        },
       });
       await tx.audit.create({
         data: {
           userId: res.locals.user.id,
-          action: "content.update",
+          action: data.verified
+            ? "content.approve.update"
+            : data.status === "review"
+              ? "content.submit-review"
+              : "content.update",
           target: item.id,
         },
       });
@@ -518,6 +612,7 @@ export function createApp() {
       await db.enquiry.findMany({ orderBy: { createdAt: "desc" }, take: 1000 }),
     ),
   );
+  app.get("/api/admin/newsletter", admin, listSubscribers);
   app.patch("/api/admin/enquiries/:id", admin, async (req, res) => {
     const id = z.string().parse(req.params.id);
     const status = z
@@ -624,7 +719,7 @@ export function createApp() {
   });
   const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+    limits: { fileSize: 50 * 1024 * 1024, files: 1 },
   });
   app.get("/api/admin/media", async (_req, res) =>
     res.json(
@@ -638,11 +733,35 @@ export function createApp() {
     }
     const alt = z.string().trim().min(1).max(300).parse(req.body.alt);
     const file = req.file;
+    if (file.mimetype !== "video/mp4" && file.size > 10 * 1024 * 1024) {
+      res
+        .status(400)
+        .json({ error: "Images and documents must be under 10 MB." });
+      return;
+    }
     const id = randomUUID();
     let buffer: Buffer;
     let extension: string;
     let mime: string;
     if (
+      file.mimetype === "video/mp4" &&
+      file.buffer.subarray(4, 8).toString() === "ftyp"
+    ) {
+      buffer = file.buffer;
+      extension = "mp4";
+      mime = "video/mp4";
+    } else if (
+      file.mimetype === "text/vtt" &&
+      file.size <= 1024 * 1024 &&
+      file.buffer
+        .toString("utf8")
+        .replace(/^\uFEFF/, "")
+        .startsWith("WEBVTT")
+    ) {
+      buffer = file.buffer;
+      extension = "vtt";
+      mime = "text/vtt";
+    } else if (
       file.mimetype === "application/pdf" &&
       file.buffer.subarray(0, 5).toString() === "%PDF-"
     ) {
@@ -665,9 +784,9 @@ export function createApp() {
       extension = "webp";
       mime = "image/webp";
     } else {
-      res
-        .status(400)
-        .json({ error: "Only JPEG, PNG, WebP and PDF files are allowed" });
+      res.status(400).json({
+        error: "Only JPEG, PNG, WebP, PDF, MP4 and WebVTT files are allowed",
+      });
       return;
     }
     await mkdir(uploadDir, { recursive: true });
@@ -688,7 +807,11 @@ export function createApp() {
     res.status(201).json(media);
   });
   app.get("/media/:filename", async (req, res) => {
-    if (!/^[a-f0-9-]+\.(webp|pdf)$/.test(req.params.filename)) {
+    if (!process.env.DATABASE_URL) {
+      res.sendStatus(404);
+      return;
+    }
+    if (!/^[a-f0-9-]+\.(webp|pdf|mp4|vtt)$/.test(req.params.filename)) {
       res.sendStatus(404);
       return;
     }
@@ -700,6 +823,7 @@ export function createApp() {
       return;
     }
     res.setHeader("X-Content-Type-Options", "nosniff");
+    res.type(record.mime);
     if (record.mime === "application/pdf") res.attachment("datasheet.pdf");
     res.sendFile(path.join(uploadDir, req.params.filename));
   });
@@ -707,13 +831,16 @@ export function createApp() {
     res
       .type("text")
       .send(
-        `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api\nSitemap: ${origin}/sitemap.xml`,
+        `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api\nDisallow: /newsletter/\nSitemap: ${origin}/sitemap.xml`,
       ),
   );
   app.get("/sitemap.xml", async (_req, res) => {
     const rows = process.env.DATABASE_URL
       ? await db.content.findMany({
-          where: { ...publicFilter(), kind: { in: ["product", "article"] } },
+          where: {
+            ...publicFilter(),
+            kind: { in: ["product", "article", "case-study"] },
+          },
         })
       : [];
     const urls = [
@@ -721,7 +848,8 @@ export function createApp() {
       "/privacy",
       "/cookies",
       ...rows.map(
-        (x) => `/${x.kind === "product" ? "products" : "insights"}/${x.slug}`,
+        (x) =>
+          `/${x.kind === "product" ? "products" : x.kind === "case-study" ? "stories" : "insights"}/${x.slug}`,
       ),
     ];
     res
@@ -746,6 +874,25 @@ export function createApp() {
     _next,
   ) => {
     void _next;
+    if (
+      error instanceof Error &&
+      "status" in error &&
+      (error.status === 400 || error.status === 403 || error.status === 404)
+    ) {
+      res.status(error.status).json({ error: error.message });
+      return;
+    }
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "P2002"
+    ) {
+      res.status(409).json({
+        error: "This URL slug is already in use. Choose a unique slug.",
+      });
+      return;
+    }
     if (error instanceof z.ZodError) {
       res
         .status(400)
@@ -753,9 +900,10 @@ export function createApp() {
       return;
     }
     if (error instanceof multer.MulterError) {
-      res
-        .status(400)
-        .json({ error: "Upload rejected. Maximum file size is 10 MB." });
+      res.status(400).json({
+        error:
+          "Upload rejected. Maximum video size is 50 MB; images and PDFs are limited to 10 MB.",
+      });
       return;
     }
     console.error(

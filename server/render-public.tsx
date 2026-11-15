@@ -13,6 +13,8 @@ import Contact from "../src/pages/Contact.js";
 import { Catalogue, SiteSearch } from "../src/pages/Catalogue.js";
 import Legal from "../src/pages/Legal.js";
 import type { Content } from "../shared/schemas.js";
+import { StoryNarrative, SourceReference } from "../src/ContentDetails.js";
+import { Newsletter } from "../src/Newsletter.js";
 
 export function renderPublic(pathname: string, item: Content | null) {
   const pages: Record<string, React.ReactNode> = {
@@ -28,6 +30,20 @@ export function renderPublic(pathname: string, item: Content | null) {
     "/privacy": <Legal />,
     "/cookies": <Legal cookies />,
     "/search": <SiteSearch />,
+    "/newsletter/confirm": (
+      <PageHero
+        label="Afrisun updates"
+        title="Confirm your connection."
+        text="Use the confirmation control to confirm your subscription."
+      />
+    ),
+    "/newsletter/unsubscribe": (
+      <PageHero
+        label="Afrisun updates"
+        title="Manage your connection."
+        text="Use the unsubscribe control to stop receiving updates."
+      />
+    ),
   };
   if (pathname.startsWith("/admin")) return "";
   const page = item ? (
@@ -38,7 +54,12 @@ export function renderPublic(pathname: string, item: Content | null) {
       {item.image && (
         <img className="article-hero" src={item.image} alt={item.imageAlt} />
       )}
-      <Markdown>{item.body}</Markdown>
+      {item.kind === "case-study" ? (
+        <StoryNarrative record={item} />
+      ) : (
+        <Markdown>{item.body}</Markdown>
+      )}
+      {item.kind === "article" && <SourceReference record={item} />}
       {item.kind === "product" && (
         <Link className="button button-navy" to={`${pathname}#quote`}>
           Request a Quote
@@ -61,6 +82,7 @@ export function renderPublic(pathname: string, item: Content | null) {
       </a>
       <Header />
       <main id="main">{page}</main>
+      <Newsletter />
       <Footer />
     </StaticRouter>,
   );

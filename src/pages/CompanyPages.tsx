@@ -20,8 +20,9 @@ import {
 import { SEO } from "../seo";
 import { goals, services, industries } from "../../shared/content";
 import { EnquiryForm } from "../forms";
-import { useApi } from "../lib";
-import type { Content } from "../../shared/schemas";
+import { ImpactDashboard } from "../ImpactDashboard";
+import { CaseStudies } from "../ImpactContent";
+import { FrequentlyAskedQuestions } from "../FrequentlyAskedQuestions";
 export function About() {
   return (
     <>
@@ -169,7 +170,7 @@ export function Services() {
         <div className="container">
           <Eyebrow>How we help</Eyebrow>
           {services.map(([title, text], i) => (
-            <Reveal className="service-row" key={title}>
+            <Reveal className="service-row" key={title} id={`service-${i + 1}`}>
               <span className="service-number">0{i + 1}</span>
               <h2>{title}</h2>
               <div>
@@ -235,10 +236,6 @@ export function Industries() {
   );
 }
 export function Sustainability() {
-  const { data: metrics } = useApi<{ items: Content[] }>(
-    "/api/content?kind=metric",
-    { items: [] },
-  );
   return (
     <>
       <SEO title="Sustainability & Impact" />
@@ -275,6 +272,13 @@ export function Sustainability() {
               sourcing, supply coordination and commercial relationships. Our
               ambition is to support renewable energy adoption in ways that
               improve everyday life.
+            </p>
+            <p>
+              Access also depends on practical commercial relationships. Payment
+              arrangements and opportunities to collaborate with finance
+              partners can be explored subject to agreement and eligibility. No
+              financing approval, standard credit facility or lending service is
+              promised by this website.
             </p>
           </div>
         </div>
@@ -376,29 +380,7 @@ export function Sustainability() {
           </div>
         </div>
       </section>
-      {metrics.items.length > 0 && (
-        <section className="section off-white">
-          <div className="container">
-            <Eyebrow>Verified company progress</Eyebrow>
-            <div className="three-grid">
-              {metrics.items.map((m) => (
-                <article className="global-goal" key={m.id}>
-                  <h3>{m.title}</h3>
-                  <p>{m.description}</p>
-                  <div className="prose">{m.body}</div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-      <div className="container">
-        <p className="notice">
-          Measuring progress: Afrisun-specific impact figures will be published
-          when verified company data is available. No company impact statistics
-          are claimed here.
-        </p>
-      </div>
+      <ImpactDashboard />
       <PartnershipCTA />
     </>
   );
@@ -465,6 +447,8 @@ export function Partners() {
           <EnquiryForm kind="partnership" />
         </div>
       </section>
+      <CaseStudies />
+      <FrequentlyAskedQuestions />
     </>
   );
 }

@@ -17,6 +17,7 @@ import { motion, useReducedMotion } from "motion/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { company, navigation, categories } from "../shared/content";
+import { detailsOf } from "../shared/enhancements";
 import { useApi } from "./lib";
 import type { Content } from "../shared/schemas";
 
@@ -57,14 +58,17 @@ export function Reveal({
   children,
   className = "",
   delay = 0,
+  id,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  id?: string;
 }) {
   const reduced = useReducedMotion();
   return (
     <motion.div
+      id={id}
       className={className}
       initial={false}
       whileInView={reduced ? {} : { y: [18, 0], opacity: [0.65, 1] }}
@@ -372,6 +376,9 @@ export function ContentCard({ item }: { item: Content }) {
       <h3>{item.title}</h3>
       <p>{item.description}</p>
       <small>
+        {article &&
+          detailsOf(item).news &&
+          `${detailsOf(item).news?.source} · `}
         {article && item.publishedAt
           ? new Date(item.publishedAt).toLocaleDateString("en-ZA")
           : item.availability === "available"
@@ -438,11 +445,18 @@ export function Notice({ title, text }: { title: string; text: string }) {
   );
 }
 export function ScrollTools() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const [progress, setProgress] = useState(0);
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    const frame = requestAnimationFrame(() => {
+      const target = hash
+        ? document.getElementById(decodeURIComponent(hash.slice(1)))
+        : null;
+      if (target) target.scrollIntoView({ behavior: "instant" });
+      else window.scrollTo(0, 0);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [pathname, hash]);
   useEffect(() => {
     const update = () => {
       const height = document.documentElement.scrollHeight - window.innerHeight;
