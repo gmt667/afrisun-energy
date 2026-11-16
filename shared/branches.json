@@ -1,0 +1,34 @@
+[
+  {
+    "code": "ZAF",
+    "name": "South Africa",
+    "locations": "Sandton headquarters",
+    "city": "Sandton",
+    "coordinates": [28.05, -26.11]
+  },
+  {
+    "code": "MWI",
+    "name": "Malawi",
+    "locations": "Lilongwe · Blantyre",
+    "city": "Lilongwe",
+    "coordinates": [33.79, -13.96]
+  },
+  {
+    "code": "MWI",
+    "name": "Malawi",
+    "locations": "Lilongwe · Blantyre",
+    "city": "Blantyre",
+    "coordinates": [35.01, -15.79]
+  },
+  {
+    "code": "ZMB",
+    "name": "Zambia",
+    "locations": "Lusaka",
+    "city": "Lusaka",
+    "coordinates": [28.28, -15.42]
+  },
+  { "code": "MOZ", "name": "Mozambique", "locations": "Mozambique branch" },
+  { "code": "TZA", "name": "Tanzania", "locations": "Tanzania branch" },
+  { "code": "KEN", "name": "Kenya", "locations": "Kenya branch" },
+  { "code": "NGA", "name": "Nigeria", "locations": "Nigeria branch" }
+]

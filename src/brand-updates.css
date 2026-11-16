@@ -1,0 +1,144 @@
+.logo {
+  min-width: 0;
+  width: 236px;
+  flex-shrink: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  letter-spacing: normal;
+}
+.logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.footer-brand .logo {
+  width: 270px;
+  max-width: 100%;
+  margin-bottom: 18px;
+}
+.admin-sidebar .logo {
+  width: 100%;
+  background: #fff;
+  padding: 7px 12px;
+  border-radius: 4px;
+}
+.branch-route {
+  fill: none;
+  stroke: #14785e;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  marker-end: url(#branch-arrow);
+}
+.branch-city-label {
+  font-size: 9px;
+  font-weight: 700;
+  fill: #102f43;
+  paint-order: stroke;
+  stroke: #eaf0ee;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.category-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin-bottom: 55px;
+}
+.category-gallery-card {
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 22px;
+}
+.category-gallery-card > div {
+  overflow: hidden;
+  background: #edf1ef;
+  aspect-ratio: 4 / 3;
+}
+.category-gallery-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+.category-gallery-card:hover img {
+  transform: scale(1.045);
+}
+.category-gallery-card > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0 10px;
+}
+.category-gallery-card h2 {
+  font-size: 23px;
+  margin: 0;
+}
+.category-gallery-card p {
+  font-size: 13px;
+  margin: 0;
+}
+@keyframes scroll-arrive {
+  from {
+    opacity: 0.3;
+    transform: translate3d(0, 32px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-entered {
+    animation: scroll-arrive 0.85s cubic-bezier(0.16, 1, 0.3, 1)
+      var(--scroll-delay, 0ms) both;
+  }
+  .scroll-hint svg {
+    animation: scroll-cue 2.2s ease-in-out infinite;
+  }
+  @keyframes scroll-cue {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5px);
+    }
+  }
+}
+@media (max-width: 1100px) {
+  .logo {
+    width: 205px;
+  }
+}
+@media (max-width: 700px) {
+  .logo {
+    width: 185px;
+    padding: 6px 9px;
+  }
+  .category-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+  }
+  .category-gallery-card h2 {
+    font-size: 18px;
+  }
+}
+@media (max-width: 420px) {
+  .category-gallery {
+    grid-template-columns: 1fr;
+  }
+  .category-gallery-card > div {
+    aspect-ratio: 16 / 10;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .category-gallery-card img {
+    transition: none;
+  }
+  .category-gallery-card:hover img {
+    transform: none;
+  }
+}

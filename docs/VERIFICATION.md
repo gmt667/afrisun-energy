@@ -1,5 +1,12 @@
 # Verification record — 15 November 2026
 
+## Corporate branding and branch network — 15 November 2026
+
+- Replaced the placeholder wordmark with the supplied corporate logo, added scroll reveals with reduced-motion support, and connected the company-supplied seven-country branch network to South Africa. Malawi includes Lilongwe and Blantyre; Zambia includes Lusaka.
+- Added locally hosted photographic category cards and image attribution. Category imagery does not establish stock or supplier affiliation.
+- ESLint, strict TypeScript, production build and all 39 unit/API tests passed. All 36 desktop/mobile browser checks passed, including logo/image loading, seven country controls, seven branch connections, branch-city details, regional connection filtering, responsive layouts and automated accessibility checks.
+- Reviewed desktop/mobile map and product-gallery screenshots. The in-app browser was unavailable; browser checks used installed Chrome. Database checks were not repeated for these presentation/content changes; the preceding integration results are recorded below.
+
 ## Premium enhancement verification — 15 November 2026
 
 Executed against the enhancement branch before its GitHub push:

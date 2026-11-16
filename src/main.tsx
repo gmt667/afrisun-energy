@@ -19,7 +19,9 @@ import {
 import { SEO } from "./seo";
 import "./styles.css";
 import "./enhancements.css";
+import "./brand-updates.css";
 import { Newsletter, NewsletterAction } from "./Newsletter";
+import { ScrollExperience } from "./ScrollExperience";
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() =>
   import("./pages/CompanyPages").then((m) => ({ default: m.About })),
@@ -63,6 +65,7 @@ function Layout() {
       <Newsletter />
       <Footer />
       <ScrollTools />
+      <ScrollExperience />
     </>
   );
 }

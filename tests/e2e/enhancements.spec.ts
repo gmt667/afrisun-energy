@@ -50,7 +50,7 @@ test("sourced Africa map supports filters, keyboard and approved plans", async (
     }),
   ).toBeVisible();
   const nigeria = page.getByRole("button", {
-    name: "Nigeria: Planned expansion",
+    name: "Nigeria: Planned expansion, Branch",
     exact: true,
   });
   await nigeria.focus();
@@ -60,7 +60,7 @@ test("sourced Africa map supports filters, keyboard and approved plans", async (
       "Approved expansion intention. This is not an active operating market.",
     ),
   ).toBeVisible();
-  await page.getByRole("button", { name: "East Africa", exact: true }).click();
+  await page.getByRole("button", { name: "North Africa", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "No approved presence to show." }),
   ).toBeVisible();

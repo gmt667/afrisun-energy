@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
-import { geoNaturalEarth1, geoPath } from "d3-geo";
+import { geoNaturalEarth1, geoPath, geoCentroid } from "d3-geo";
+import branches from "../shared/branches.json" with { type: "json" };
 const source = await readFile(".cache-map/countries.geojson");
 const all = JSON.parse(source);
 const features = all.features.filter(
@@ -49,6 +50,13 @@ await writeFile(
     source: "Natural Earth 1:50m admin 0",
     sha256: createHash("sha256").update(source).digest("hex"),
     countries,
+    branches: branches.map((branch) => {
+      const feature = features.find(
+        (f) => f.properties.ISO_A3_EH === branch.code,
+      );
+      const point = projection(branch.coordinates || geoCentroid(feature));
+      return { ...branch, point, approximate: !branch.coordinates };
+    }),
   }),
 );
 await writeFile(
