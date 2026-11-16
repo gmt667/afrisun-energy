@@ -8,7 +8,19 @@ test("company logo, connected branches and product photography load", async ({
   await expect(logo).toBeVisible();
   await expect(logo).toHaveJSProperty("naturalWidth", 1200);
   await expect(page.locator(".branch-route")).toHaveCount(7);
+  await expect(page.locator(".branch-route").first()).toHaveAttribute(
+    "marker-end",
+    /branch-arrow/,
+  );
   await expect(page.locator(".country-controls button")).toHaveCount(7);
+  await expect(page.getByLabel("Filter map by country")).toHaveValue(
+    "All countries",
+  );
+  await page.getByLabel("Filter map by country").selectOption("KEN");
+  await expect(page.locator(".country-information")).toContainText("Kenya");
+  await expect(page.locator(".branch-route")).toHaveCount(1);
+  await page.getByRole("button", { name: "All regions", exact: true }).click();
+  await expect(page.locator(".branch-route")).toHaveCount(7);
   await page.getByRole("button", { name: "Malawi", exact: true }).click();
   await expect(page.locator(".country-information")).toContainText(
     "Lilongwe · Blantyre",

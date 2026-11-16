@@ -324,6 +324,26 @@
   border-bottom: 1px solid var(--line);
   margin-bottom: 30px;
 }
+.map-country-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  background: #ffffffc9;
+  color: var(--navy);
+  font-size: 11px;
+}
+.map-country-filter select {
+  min-height: 42px;
+  min-width: min(230px, 60%);
+  padding: 8px 30px 8px 12px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--navy);
+  font: inherit;
+}
 .country-controls button {
   font-size: 11px;
   padding: 11px 14px;

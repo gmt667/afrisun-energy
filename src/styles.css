@@ -291,7 +291,11 @@ section[id] {
   margin-bottom: -94px;
 }
 .site-header.scrolled {
-  box-shadow: 0 2px 20px #102b4610;
+  background: rgb(255 255 255 / 78%);
+  -webkit-backdrop-filter: saturate(150%) blur(16px);
+  backdrop-filter: saturate(150%) blur(16px);
+  border-bottom: 1px solid rgb(255 255 255 / 55%);
+  box-shadow: 0 4px 24px rgb(16 43 70 / 10%);
 }
 .header-inner {
   width: min(1500px, calc(100% - 80px));

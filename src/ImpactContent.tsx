@@ -54,6 +54,7 @@ export function Footprint() {
   });
   const [region, setRegion] = useState("All regions");
   const [selected, setSelected] = useState("ZAF");
+  const [countryFilter, setCountryFilter] = useState("All countries");
   const [hovered, setHovered] = useState("");
   const id = useId().replaceAll(":", "");
   const verified = data.items
@@ -95,11 +96,18 @@ export function Footprint() {
     )
   )
     markets.unshift(hq);
-  const visible = markets.filter(
-    (x) =>
-      region === "All regions" ||
-      countries.find((c) => c.code === x.market.countryCode)?.region === region,
-  );
+  const visible = markets
+    .filter(
+      (x) =>
+        region === "All regions" ||
+        countries.find((c) => c.code === x.market.countryCode)?.region ===
+          region,
+    )
+    .filter(
+      (x) =>
+        countryFilter === "All countries" ||
+        x.market.countryCode === countryFilter,
+    );
   const codes = [...new Set(visible.map((x) => x.market.countryCode))];
   const currentCode = codes.includes(selected) ? selected : codes[0];
   const current = visible.filter((x) => x.market.countryCode === currentCode);
@@ -148,6 +156,16 @@ export function Footprint() {
               aria-pressed={region === r}
               onClick={() => {
                 setRegion(r);
+                setCountryFilter("All countries");
+                setSelected(
+                  r === "All regions"
+                    ? "ZAF"
+                    : visible.find(
+                        (x) =>
+                          countries.find((c) => c.code === x.market.countryCode)
+                            ?.region === r,
+                      )?.market.countryCode || "ZAF",
+                );
                 setHovered("");
               }}
             >
@@ -155,6 +173,32 @@ export function Footprint() {
             </button>
           ))}
         </div>
+        <label className="map-country-filter">
+          <span>Show branches</span>
+          <select
+            aria-label="Filter map by country"
+            value={countryFilter}
+            onChange={(event) => {
+              const code = event.target.value;
+              setCountryFilter(code);
+              setSelected(
+                code === "All countries"
+                  ? codes.includes("ZAF")
+                    ? "ZAF"
+                    : codes[0]
+                  : code,
+              );
+            }}
+          >
+            <option value="All countries">All countries in region</option>
+            {codes.map((code) => (
+              <option key={code} value={code}>
+                {countries.find((country) => country.code === code)?.name ||
+                  code}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="africa-layout">
           <div className="africa-visual">
             <div className="map-caption">
@@ -187,6 +231,17 @@ export function Footprint() {
                     <rect width="6" height="6" fill="#f3f0e4" />
                     <path d="M0 6 6 0" stroke="#a87412" strokeWidth="1" />
                   </pattern>
+                  <marker
+                    id={`${id}-branch-arrow`}
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="6"
+                    refY="3.5"
+                    orient="auto"
+                    markerUnits="userSpaceOnUse"
+                  >
+                    <path d="M0 0 7 3.5 0 7Z" fill="#14785e" />
+                  </marker>
                 </defs>
                 {map.countries.map((country) => {
                   const records = visible.filter(
@@ -278,10 +333,10 @@ export function Footprint() {
                       const curve = `M ${ox} ${oy} Q ${Math.min(ox, x) - 42} ${(oy + y) / 2} ${x} ${y}`;
                       return (
                         <g key={`${branch.code}-${branch.city || i}`}>
-                          <path className="branch-route-base" d={curve} />
                           <motion.path
                             className="branch-route"
                             d={curve}
+                            markerEnd={`url(#${id}-branch-arrow)`}
                             initial={false}
                             whileInView={
                               reduced
@@ -291,13 +346,6 @@ export function Footprint() {
                             viewport={{ once: true }}
                             transition={{ duration: 1.5, delay: i * 0.13 }}
                           />
-                          <circle
-                            className="branch-pin-halo"
-                            cx={x}
-                            cy={y}
-                            r="7"
-                          />
-                          <circle className="branch-pin" cx={x} cy={y} r="3" />
                           <text
                             className="branch-city-label"
                             x={
@@ -329,18 +377,6 @@ export function Footprint() {
                     .filter((b) => b.code === "ZAF")
                     .map((branch) => (
                       <g key="headquarters">
-                        <circle
-                          className="hq-pin-halo"
-                          cx={branch.point[0]}
-                          cy={branch.point[1]}
-                          r="11"
-                        />
-                        <circle
-                          className="hq-pin"
-                          cx={branch.point[0]}
-                          cy={branch.point[1]}
-                          r="4.5"
-                        />
                         <text
                           className="branch-city-label"
                           x={branch.point[0] + 12}
