@@ -16,12 +16,13 @@ export function SEO({
 }) {
   const location = useLocation();
   useEffect(() => {
-    document.title = `${title} | Afrisun Energy`;
+    const pageTitle = `${title} | Afrisun Energy`;
+    document.title = "";
     const origin = window.location.origin;
     const url = origin + location.pathname;
     const metas: Record<string, string> = {
       description,
-      "og:title": document.title,
+      "og:title": pageTitle,
       "og:description": description,
       "og:type": article ? "article" : "website",
       "og:url": url,
