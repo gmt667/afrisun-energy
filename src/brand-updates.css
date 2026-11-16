@@ -23,6 +23,21 @@
   padding: 7px 12px;
   border-radius: 4px;
 }
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.theme-toggle:hover {
+  background: rgb(128 145 160 / 12%);
+}
 .branch-route {
   fill: none;
   stroke: #14785e;
