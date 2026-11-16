@@ -8,6 +8,7 @@ import {
   Menu,
   X,
   Sun,
+  Moon,
   ChevronDown,
   MapPin,
   Phone,
@@ -99,6 +100,11 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [dropdown, setDropdown] = useState(false);
+  const [dark, setDark] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.localStorage.getItem("afrisun-theme") === "dark",
+  );
   const ref = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -111,6 +117,11 @@ export function Header() {
     setOpen(false);
     setDropdown(false);
   }, [pathname]);
+  useEffect(() => {
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    document.documentElement.style.colorScheme = dark ? "dark" : "light";
+    window.localStorage.setItem("afrisun-theme", dark ? "dark" : "light");
+  }, [dark]);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const onKey = (e: KeyboardEvent) => {
@@ -185,6 +196,15 @@ export function Header() {
             Partner With Us
           </Button>
         </nav>
+        <button
+          className="theme-toggle"
+          aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+          aria-pressed={dark}
+          onClick={() => setDark((value) => !value)}
+        >
+          {dark ? <Sun size={19} /> : <Moon size={19} />}
+          <span>{dark ? "Light" : "Dark"}</span>
+        </button>
         <Link to="/search" className="search-link" aria-label="Search website">
           <Search size={20} />
         </Link>
