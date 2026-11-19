@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ProjectGallery } from "../ProjectGallery";
 import {
   ArrowUpRight,
   Check,
@@ -380,6 +381,7 @@ export function Sustainability() {
           </div>
         </div>
       </section>
+      <ProjectGallery />
       <ImpactDashboard />
       <PartnershipCTA />
     </>

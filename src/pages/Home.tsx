@@ -1,4 +1,5 @@
 import { Footprint, CaseStudies } from "../ImpactContent";
+import { ProjectGallery } from "../ProjectGallery";
 import { ImpactDashboard } from "../ImpactDashboard";
 import { PartnerTicker } from "../PartnerTicker";
 import { VideoStories } from "../VideoStories";
@@ -338,8 +339,8 @@ export default function Home() {
       <section className="impact-section">
         <div className="impact-photo">
           <img
-            src="/images/solar-detail.webp"
-            alt="Illustrative close view of photovoltaic solar panels"
+            src="/images/projects/classroom-lighting.webp"
+            alt="Students studying in an electrically lit classroom"
             loading="lazy"
           />
           <div>
@@ -444,6 +445,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <ProjectGallery />
       <ImpactDashboard />
       <Footprint />
       <PartnerTicker />

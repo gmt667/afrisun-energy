@@ -23,6 +23,36 @@ beforeEach(() => {
   process.env.ENQUIRIES_ENABLED = "false";
 });
 describe("API safety boundaries", () => {
+  it.each(["confirm", "unsubscribe"])(
+    "rejects a missing newsletter %s body as invalid input",
+    async (action) => {
+      const response = await request(createApp())
+        .post(`/api/newsletter/${action}`)
+        .set("Origin", "http://localhost:5173");
+      expect(response.status).toBe(400);
+    },
+  );
+  it("rejects a multibyte enquiry signature without a server error", async () => {
+    process.env.DATABASE_URL = "postgresql://test";
+    process.env.ENQUIRIES_ENABLED = "true";
+    const response = await request(createApp())
+      .post("/api/enquiries")
+      .set("Origin", "http://localhost:5173")
+      .send({
+        kind: "contact",
+        name: "Test Person",
+        organisation: "Test Organisation",
+        email: "test@example.com",
+        phone: "+265123456789",
+        category: "general",
+        message: "Please provide more information.",
+        consent: true,
+        startedAt: Date.now() - 5000,
+        challenge: `${Date.now() - 5000}.nonce.${"é".repeat(64)}`,
+      });
+    expect(response.status).toBe(400);
+    expect(response.body.error).toContain("reload the form");
+  });
   it("reports local unconfigured services accurately", async () => {
     const response = await request(createApp()).get("/api/config");
     expect(response.body.enquiriesEnabled).toBe(false);

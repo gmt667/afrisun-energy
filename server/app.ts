@@ -48,8 +48,11 @@ const uploadDir = path.resolve(process.env.UPLOAD_DIR || "uploads");
 const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 const sign = (s: string) =>
   createHmac("sha256", secret).update(s).digest("hex");
-const same = (a: string, b: string) =>
-  a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
+const same = (a: string, b: string) => {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left, right);
+};
 export const publicWhere = {
   status: "published",
   demo: false,

@@ -23,6 +23,7 @@ test("public routes render without overflow or runtime errors", async ({
   ]) {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     await expect(page.locator("h1")).toBeVisible();
+    await expect(page).toHaveTitle(/.+ \| Afrisun Energy$/);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,

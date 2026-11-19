@@ -6,6 +6,44 @@ export const company = {
   address: "1 Lawnmarket Road, Morningside Villas, Sandton, 2196, South Africa",
   registration: "2026/231724/07",
 };
+export const socialLinks = [
+  {
+    name: "WhatsApp",
+    url: "https://wa.me/27635483486",
+    icon: "whatsapp.svg",
+    label: "Chat with Afrisun Energy on WhatsApp",
+  },
+  {
+    name: "Facebook",
+    url: "https://www.facebook.com/share/18oTFEf5em/",
+    icon: "facebook.png",
+    label: "Afrisun Energy on Facebook",
+  },
+  {
+    name: "TikTok",
+    url: "https://www.tiktok.com/@afrisun.energy1",
+    icon: "tiktok.ico",
+    label: "Afrisun Energy on TikTok",
+  },
+  {
+    name: "X",
+    url: "https://x.com/AfrisunEnergy",
+    icon: "x.svg",
+    label: "Afrisun Energy on X",
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/afrisun.solar.energy/",
+    icon: "instagram-app.png",
+    label: "Afrisun Energy on Instagram",
+  },
+  {
+    name: "LinkedIn search",
+    url: "https://www.linkedin.com/search/results/companies/?keywords=Afrisun%20Energy",
+    icon: "linkedin.png",
+    label: "Search for Afrisun Energy companies on LinkedIn",
+  },
+] as const;
 export const categories = [
   {
     slug: "solar-panels",
@@ -13,14 +51,14 @@ export const categories = [
     description:
       "Monocrystalline, bifacial and high-efficiency photovoltaic modules.",
     icon: "Sun",
-    image: "/images/products/solar-panels.webp",
+    image: "/images/projects/school-solar.webp",
   },
   {
     slug: "inverters",
     name: "Solar inverters",
     description: "Hybrid, off-grid and grid-tied conversion systems.",
     icon: "Zap",
-    image: "/images/products/solar-inverter.webp",
+    image: "/images/projects/three-phase-inverter.webp",
   },
   {
     slug: "energy-storage",
@@ -28,7 +66,7 @@ export const categories = [
     description:
       "Lithium battery systems for residential and commercial applications.",
     icon: "Battery",
-    image: "/images/products/energy-storage.webp",
+    image: "/images/projects/school-inverter.webp",
   },
   {
     slug: "solar-lighting",

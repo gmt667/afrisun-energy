@@ -87,10 +87,9 @@ export function newsletterRouter() {
   );
   for (const action of ["confirm", "unsubscribe"] as const)
     router.post(`/${action}`, async (req, res) => {
-      const token = z
-        .string()
-        .regex(/^[a-f0-9]{64}$/)
-        .parse(req.body.token);
+      const { token } = z
+        .object({ token: z.string().regex(/^[a-f0-9]{64}$/) })
+        .parse(req.body);
       if (!process.env.DATABASE_URL) {
         res.status(503).json({ error: "This service is unavailable." });
         return;

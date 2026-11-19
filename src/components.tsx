@@ -17,7 +17,12 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { company, navigation, categories } from "../shared/content";
+import {
+  company,
+  navigation,
+  categories,
+  socialLinks,
+} from "../shared/content";
 import { detailsOf } from "../shared/enhancements";
 import { useApi } from "./lib";
 import type { Content } from "../shared/schemas";
@@ -233,6 +238,27 @@ export function Footer() {
             Creating opportunity.
           </p>
           <span>Powering Africa’s Future</span>
+          <nav className="footer-social" aria-label="Social media">
+            {socialLinks.map(({ name, url, icon, label }) => (
+              <a
+                key={name}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${label} (opens in a new tab)`}
+              >
+                <span className="social-logo" data-brand={name}>
+                  <img
+                    src={`/images/social/${icon}`}
+                    alt=""
+                    width="24"
+                    height="24"
+                  />
+                </span>
+                <span>{name}</span>
+              </a>
+            ))}
+          </nav>
         </div>
         <div>
           <h3>Company</h3>
@@ -284,6 +310,12 @@ export function Footer() {
           © 2026 Afrisun Energy (Pty) Ltd. All rights reserved.
           <br />
           Registration Number: {company.registration}
+          <br />
+          Developed by George M. Taumbe (
+          <a href="tel:+2659967236711">+265 9967236711</a> /{" "}
+          <a href="tel:+265885362150">+265 885362150</a>)
+          <br />
+          <a href="mailto:georgetaumbe@gmail.com">georgetaumbe@gmail.com</a>
         </span>
         <div>
           <Link to="/privacy">Privacy Policy</Link>

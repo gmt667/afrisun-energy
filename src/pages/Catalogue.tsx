@@ -224,8 +224,9 @@ export function Catalogue({ articles = false }: { articles?: boolean }) {
             <p className="fine-print">
               Category suggestions describe potential sourcing interests, not
               confirmed inventory. Only verified, published products appear in
-              the catalogue. Illustrative photography: Pexels (Elite Power Group
-              / Kindel Media); solar-powered pump by{" "}
+              the catalogue. Installation photographs supplied for this website;
+              solar lighting photography by Kindel Media / Pexels; solar-powered
+              pump by{" "}
               <a
                 href="https://commons.wikimedia.org/wiki/File:Solar-powered_pump.jpg"
                 target="_blank"

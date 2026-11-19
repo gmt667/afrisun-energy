@@ -17,7 +17,7 @@ export function SEO({
   const location = useLocation();
   useEffect(() => {
     const pageTitle = `${title} | Afrisun Energy`;
-    document.title = "";
+    document.title = pageTitle;
     const origin = window.location.origin;
     const url = origin + location.pathname;
     const metas: Record<string, string> = {

@@ -157,3 +157,108 @@
     transform: none;
   }
 }
+/* Supplied project photography stays legible at every screen width. */
+.project-gallery {
+  background: var(--off-white, #f6f7f3);
+}
+.project-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+.project-photo-grid figure {
+  margin: 0;
+  min-width: 0;
+}
+.project-photo-grid a {
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.project-photo-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.project-photo-grid a:hover img {
+  transform: scale(1.025);
+}
+.project-photo-grid figcaption {
+  padding: 14px 0 8px;
+  font-weight: 650;
+}
+.regional-photo {
+  margin: 40px 0 0;
+}
+.regional-photo img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  object-position: center 65%;
+  border-radius: 4px;
+}
+.regional-photo figcaption {
+  padding-top: 12px;
+  font-size: 14px;
+}
+.regional-photo figcaption a {
+  margin-left: 8px;
+  text-decoration: underline;
+}
+@media (max-width: 900px) {
+  .project-photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+@media (max-width: 560px) {
+  .project-photo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-photo-grid img {
+    transition: none;
+  }
+}
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+}
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #bacad6;
+  font-size: 12px;
+  min-height: 44px;
+}
+.social-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 8px;
+  background: #fff;
+  border-radius: 8px;
+}
+.social-logo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.social-logo[data-brand="X"] {
+  background: #000;
+}
+.footer-social a:hover,
+.footer-social a:focus-visible {
+  color: var(--gold);
+  text-decoration: underline;
+}

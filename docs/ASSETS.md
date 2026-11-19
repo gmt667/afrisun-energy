@@ -1,5 +1,19 @@
 # Asset provenance
 
+## Social logos
+
+Social marks are self-hosted in `public/images/social/` without recolouring. Facebook uses the primary blue PNG from Meta's official logo pack; WhatsApp uses the green SVG from whatsapp.com. Instagram and TikTok use their official website app/favicons. X uses the white SVG from its official brand toolkit on a black background. LinkedIn uses `LI-In-Bug.png` from its official downloads pack. Sources: https://www.meta.com/brand/resources/facebook/logo/ , https://www.whatsapp.com/ , https://www.instagram.com/ , https://www.tiktok.com/ , https://about.x.com/en/who-we-are/brand-toolkit , https://brand.linkedin.com/downloads . Marks remain the property of their respective owners and identify outbound links only.
+
+The LinkedIn destination is explicitly a company search because an official Afrisun Energy page could not be verified. Replace it with the confirmed page when supplied. WhatsApp uses the company contact number, +27 63 548 3486.
+
+## Project photographs added 18 November 2026
+
+The user supplied school, classroom, inverter and community-installation photographs and the `Thuchira MBG-Aerial view.zip` archive. Optimised WebP copies are in `public/images/projects/`. The gallery uses descriptive captions without claiming project ownership, equipment capacity or measured outcomes. The two inverter photographs replace the previous Elite Power Group category images; the school rooftop replaces the previous solar-panel category image. The existing rooftop team image remains unchanged at the user's request.
+
+`three-phase-inverter.webp` uses the camera-generated JPEG preview embedded in `3 phase Inverter installation.CR2`. Other supplied images include the two school JPGs, the classroom-lighting JPG, and `20251028_095908.jpg`. Archive selections show Thuchira, Mombezi, Lifuwu rice milling, Kapiri Health Centre and the Phata pump, named from the supplied filenames.
+
+Additional landscape: [Cape Town mountain and coastline, Pexels photo 2327372](https://www.pexels.com/photo/high-angle-shot-of-mountain-2327372/), used under the [Pexels licence](https://www.pexels.com/license/). Downloaded locally and converted to WebP. It is regional context, not an Afrisun project location. No additional online people photography is displayed.
+
 The user supplied four reference images in this session. Only the supplied aerial solar photograph and rooftop sector photograph are included in this review implementation. The Cloudbreak design and Sungrow branded product image are used solely as design references and are not included as Afrisun products or affiliations.
 
 - `solar-aerial-original.png`: supplied image #2, aerial solar array. Review illustration, not an Afrisun project or claimed geography.
