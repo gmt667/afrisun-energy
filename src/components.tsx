@@ -246,6 +246,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${label} (opens in a new tab)`}
+                title={name}
               >
                 <span className="social-logo" data-brand={name}>
                   <img
@@ -255,7 +256,7 @@ export function Footer() {
                     height="24"
                   />
                 </span>
-                <span>{name}</span>
+                <span className="sr-only">{name}</span>
               </a>
             ))}
           </nav>
