@@ -63,13 +63,7 @@ test("contact and newsletter forms prepare email drafts", async ({ page }) => {
   await expect(
     page.locator('.contact-detail a[href^="mailto:"]'),
   ).toHaveCount(5);
-  await expect(page.locator(".enquiry-form .form-info a")).toHaveAttribute(
-    "href",
-    "mailto:admin@afrisunenergy.co.za",
-  );
-  await expect(
-    page.getByText("This static site prepares a message in your email app."),
-  ).toBeVisible();
+  await expect(page.locator(".enquiry-form .form-info")).toHaveCount(0);
   await expect(
     page.locator(".newsletter-section button[type=submit]"),
   ).toHaveText(/Prepare Email/);

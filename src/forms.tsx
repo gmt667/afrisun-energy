@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send, AlertCircle } from "lucide-react";
+import { Send } from "lucide-react";
 import { enquirySchema } from "../shared/schemas";
 import { company } from "../shared/content";
 import { Link, useSearchParams } from "react-router-dom";
@@ -84,13 +84,6 @@ export function EnquiryForm({
             ? "Partnership enquiry"
             : "Send us a message"}
       </h3>
-      <div className="form-info">
-        <AlertCircle size={20} />
-        <p>
-          This static site prepares a message in your email app. You can also{" "}
-          <a href={`mailto:${recipient}`}>email us directly</a>.
-        </p>
-      </div>
       <div className="form-grid">
         {field("name", "Full name *")}
         {field("organisation", "Organisation *")}
