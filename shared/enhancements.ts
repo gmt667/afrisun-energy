@@ -125,11 +125,11 @@ export const detailsSchema = z.object({
     .object({
       url: z
         .string()
-        .regex(/^$|^\/media\/[a-f0-9-]+\.mp4$/)
+        .regex(/^$|^\/videos\/[a-z0-9_-]+\.mp4$/i)
         .default(""),
       captions: z
         .string()
-        .regex(/^$|^\/media\/[a-f0-9-]+\.vtt$/)
+        .regex(/^$|^\/captions\/[a-z0-9_-]+\.vtt$/i)
         .default(""),
       transcript: copy(20000),
       location: copy(300),

@@ -13,6 +13,7 @@ import {
   MapPin,
   Phone,
   Mail,
+  MessageCircle,
 } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import ReactMarkdown from "react-markdown";
@@ -24,8 +25,8 @@ import {
   socialLinks,
 } from "../shared/content";
 import { detailsOf } from "../shared/enhancements";
-import { useApi } from "./lib";
 import type { Content } from "../shared/schemas";
+import { publicContent } from "../shared/public-content";
 
 export function Logo() {
   return (
@@ -293,10 +294,26 @@ export function Footer() {
             <MapPin size={15} />
             Sandton, South Africa
           </p>
-          <a href="tel:+27635483486">
+          <a href={`tel:${company.phone.replace(/\D/g, "")}`}>
             <Phone size={15} />
             {company.phone}
           </a>
+          <div className="footer-whatsapp">
+            <p>
+              <MessageCircle size={15} />
+              WhatsApp
+            </p>
+            {company.whatsappNumbers.map((number) => (
+              <a
+                href={`https://wa.me/${number.replace(/\D/g, "")}`}
+                key={number}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {number}
+              </a>
+            ))}
+          </div>
           {company.emails.map((email, index) => (
             <a href={`mailto:${email}`} key={email}>
               {index === 0 && <Mail size={15} />}
@@ -445,10 +462,7 @@ export function ContentCard({ item }: { item: Content }) {
   );
 }
 export function LatestInsights() {
-  const { data, error } = useApi<{ items: Content[] }>(
-    "/api/content?kind=article",
-    { items: [] },
-  );
+  const items = publicContent.articles;
   return (
     <section className="section">
       <div className="container">
@@ -463,14 +477,9 @@ export function LatestInsights() {
             All insights <ArrowUpRight size={18} />
           </Link>
         </div>
-        {error ? (
-          <Notice
-            title="Insights are temporarily unavailable"
-            text="Please try again shortly."
-          />
-        ) : data.items.length ? (
+        {items.length ? (
           <div className="three-grid">
-            {data.items.slice(0, 3).map((x) => (
+            {items.slice(0, 3).map((x) => (
               <ContentCard key={x.id} item={x} />
             ))}
           </div>

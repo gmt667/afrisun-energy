@@ -11,38 +11,73 @@ import {
 import {
   PageHero,
   ContentCard,
-  Notice,
   Eyebrow,
   Button,
   Markdown,
 } from "../components";
 import { SEO } from "../seo";
-import { useApi, formatDate, readingTime } from "../lib";
+import { formatDate, readingTime } from "../lib";
 import { categories, insightTopics } from "../../shared/content";
 import type { Content } from "../../shared/schemas";
+import { publicContent } from "../../shared/public-content";
 import { EnquiryForm } from "../forms";
 import { SourceReference } from "../ContentDetails";
 import { detailsOf } from "../../shared/enhancements";
 type Listing = { items: Content[]; total: number; page: number };
+const matchingContent = (items: Content[], query: string) => {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return items;
+  return items.filter((item) =>
+    [item.title, item.description, item.body, item.brand, item.model]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalized),
+  );
+};
 export function Catalogue({ articles = false }: { articles?: boolean }) {
   const [params, setParams] = useSearchParams();
-  const kind = articles ? "article" : "product";
-  const query = new URLSearchParams(params);
-  query.set("kind", kind);
-  const { data, loading, error } = useApi<Listing>(`/api/content?${query}`, {
-    items: [],
-    total: 0,
-    page: 1,
-  });
-  const { data: cmsCategories } = useApi<{ items: Content[] }>(
-    `/api/content?kind=${articles ? "article-category" : "category"}`,
-    { items: [] },
-  );
-  const { data: facets } = useApi("/api/facets", {
-    brands: [] as string[],
-    specifications: [] as { name: string; value: string }[],
-  });
+  const source = articles ? publicContent.articles : publicContent.products;
+  const q = params.get("q") || "";
   const selected = params.get("category") || "";
+  const category = categories.find((item) => item.slug === selected);
+  const topic = insightTopics.find((item) => item.slug === selected);
+  const brand = params.get("brand") || "";
+  const specification = params.get("specification") || "";
+  const specValue = params.get("specValue") || "";
+  const filtered = matchingContent(source, q).filter((item) => {
+    const categoryMatches =
+      !selected ||
+      item.category === selected ||
+      item.category === category?.name ||
+      item.category === topic?.label;
+    const brandMatches = articles || !brand || item.brand === brand;
+    const specificationMatches =
+      articles ||
+      !specification ||
+      item.specifications.some(
+        (item) => item.name === specification && item.value === specValue,
+      );
+    return categoryMatches && brandMatches && specificationMatches;
+  });
+  const total = filtered.length;
+  const pageCount = Math.max(1, Math.ceil(total / 12));
+  const page = Math.min(pageCount, Math.max(1, Number(params.get("page") || 1)));
+  const data: Listing = {
+    items: filtered.slice((page - 1) * 12, page * 12),
+    total,
+    page,
+  };
+  const cmsCategories = { items: [] as Content[] };
+  const facets = {
+    brands: [...new Set(source.map((item) => item.brand).filter(Boolean))],
+    specifications: [
+      ...new Map(
+        source
+          .flatMap((item) => item.specifications)
+          .map((item) => [`${item.name}:${item.value}`, item] as const),
+      ).values(),
+    ],
+  };
   const proposed = categories.find((c) => c.slug === selected);
   const change = (key: string, value: string) => {
     const next = new URLSearchParams(params);
@@ -246,13 +281,7 @@ export function Catalogue({ articles = false }: { articles?: boolean }) {
               supplier or installer affiliation.
             </p>
           )}
-          {loading ? (
-            <div className="loading" role="status">
-              Loading {articles ? "insights" : "products"}…
-            </div>
-          ) : error ? (
-            <Notice title="Content is temporarily unavailable" text={error} />
-          ) : data.items.length ? (
+          {data.items.length ? (
             <>
               <p className="results-count">
                 {data.total} {articles ? "articles" : "products"}
@@ -385,23 +414,14 @@ export function Catalogue({ articles = false }: { articles?: boolean }) {
 }
 export function Detail({ article = false }: { article?: boolean }) {
   const { slug } = useParams();
-  const kind = article ? "article" : "product";
-  const {
-    data: item,
-    loading,
-    error,
-  } = useApi<Content | null>(`/api/content/${kind}/${slug}`, null);
-  const { data: related } = useApi<Listing>(
-    `/api/content?kind=${kind}&category=${encodeURIComponent(item?.category || "")}`,
-    { items: [], total: 0, page: 1 },
-  );
-  if (loading)
-    return (
-      <main className="container section loading" role="status">
-        Loading…
-      </main>
-    );
-  if (error || !item)
+  const source = article ? publicContent.articles : publicContent.products;
+  const item = source.find((record) => record.slug === slug);
+  const related = item
+    ? source.filter(
+        (record) => record.category === item.category && record.id !== item.id,
+      )
+    : [];
+  if (!item)
     return (
       <>
         <SEO title="Content unavailable" noindex />
@@ -568,14 +588,12 @@ export function Detail({ article = false }: { article?: boolean }) {
           </div>
         </section>
       )}
-      {related.items.some((x) => x.id !== item.id) && (
+      {related.length > 0 && (
         <section className="section off-white">
           <div className="container">
             <h2>Related {article ? "perspectives" : "products"}</h2>
             <div className="three-grid">
-              {related.items
-                .filter((x) => x.id !== item.id)
-                .slice(0, 3)
+              {related.slice(0, 3)
                 .map((x) => (
                   <ContentCard key={x.id} item={x} />
                 ))}
@@ -589,14 +607,8 @@ export function Detail({ article = false }: { article?: boolean }) {
 export function SiteSearch() {
   const [params, setParams] = useSearchParams();
   const q = params.get("q") || "";
-  const { data: products, error: pe } = useApi<Listing>(
-    `/api/content?kind=product&q=${encodeURIComponent(q)}`,
-    { items: [], total: 0, page: 1 },
-  );
-  const { data: articles, error: ae } = useApi<Listing>(
-    `/api/content?kind=article&q=${encodeURIComponent(q)}`,
-    { items: [], total: 0, page: 1 },
-  );
+  const products = matchingContent(publicContent.products, q);
+  const articles = matchingContent(publicContent.articles, q);
   return (
     <>
       <SEO title="Search" noindex />
@@ -624,18 +636,12 @@ export function SiteSearch() {
               />
             </label>
           </form>
-          {(pe || ae) && (
-            <Notice
-              title="Search unavailable"
-              text="Please try again shortly."
-            />
-          )}
           {q && (
             <>
               <h2 className="search-heading">Products</h2>
-              {products.items.length ? (
+              {products.length ? (
                 <div className="three-grid">
-                  {products.items.map((x) => (
+                  {products.map((x) => (
                     <ContentCard key={x.id} item={x} />
                   ))}
                 </div>
@@ -643,9 +649,9 @@ export function SiteSearch() {
                 <p>No matching published products.</p>
               )}
               <h2 className="search-heading">Insights</h2>
-              {articles.items.length ? (
+              {articles.length ? (
                 <div className="three-grid">
-                  {articles.items.map((x) => (
+                  {articles.map((x) => (
                     <ContentCard key={x.id} item={x} />
                   ))}
                 </div>

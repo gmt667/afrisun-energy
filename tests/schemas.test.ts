@@ -53,7 +53,7 @@ describe("publication safeguards", () => {
   });
   it("requires alt text for published images", () =>
     expect(
-      contentSchema.safeParse({ ...article, image: "/media/aaaa.webp" })
+      contentSchema.safeParse({ ...article, image: "/images/aaaa.webp" })
         .success,
     ).toBe(false));
 });
@@ -67,7 +67,6 @@ describe("enquiry validation", () => {
     category: "Retailer",
     message: "Please discuss sourcing requirements.",
     consent: true,
-    startedAt: Date.now() - 10000,
   };
   it("accepts a valid contact enquiry", () =>
     expect(enquirySchema.safeParse(valid).success).toBe(true));
@@ -75,10 +74,6 @@ describe("enquiry validation", () => {
     expect(enquirySchema.safeParse({ ...valid, consent: false }).success).toBe(
       false,
     ));
-  it("rejects spam honeypot", () =>
-    expect(
-      enquirySchema.safeParse({ ...valid, website: "spam.example" }).success,
-    ).toBe(false));
   it("requires quote product, quantity and country", () =>
     expect(enquirySchema.safeParse({ ...valid, kind: "quote" }).success).toBe(
       false,

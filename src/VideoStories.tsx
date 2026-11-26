@@ -10,14 +10,9 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Eyebrow } from "./components";
-import { useApi } from "./lib";
 import { detailsOf } from "../shared/enhancements";
-import type { Content } from "../shared/schemas";
+import { publicContent } from "../shared/public-content";
 export function VideoStories() {
-  const { data } = useApi<{ items: Content[] }>(
-    "/api/content?kind=video-story&limit=100",
-    { items: [] },
-  );
   const [selected, setSelected] = useState(0);
   const [auto, setAuto] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -25,7 +20,7 @@ export function VideoStories() {
   const engaged = hovered || focused;
   const [playing, setPlaying] = useState(false);
   const reduced = useReducedMotion();
-  const items = data.items.filter(
+  const items = publicContent.videoStories.filter(
     (x) =>
       x.status === "published" &&
       x.verified &&

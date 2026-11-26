@@ -17,12 +17,6 @@
   max-width: 100%;
   margin-bottom: 18px;
 }
-.admin-sidebar .logo {
-  width: 100%;
-  background: #fff;
-  padding: 7px 12px;
-  border-radius: 4px;
-}
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -163,6 +157,10 @@
 /* Supplied project photography stays legible at every screen width. */
 .project-gallery {
   background: var(--off-white, #f6f7f3);
+}
+:root[data-theme="dark"] .project-gallery {
+  background: #141f29;
+  color: #dce6ed;
 }
 .project-photo-grid {
   display: grid;

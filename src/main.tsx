@@ -20,7 +20,7 @@ import { SEO } from "./seo";
 import "./styles.css";
 import "./enhancements.css";
 import "./brand-updates.css";
-import { Newsletter, NewsletterAction } from "./Newsletter";
+import { Newsletter } from "./Newsletter";
 import { ScrollExperience } from "./ScrollExperience";
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() =>
@@ -49,7 +49,6 @@ const SiteSearch = lazy(() =>
 );
 const Contact = lazy(() => import("./pages/Contact"));
 const Legal = lazy(() => import("./pages/Legal"));
-const Admin = lazy(() => import("./pages/Admin"));
 const Story = lazy(() => import("./pages/Story"));
 function Layout() {
   const { pathname } = useLocation();
@@ -100,7 +99,6 @@ createRoot(document.getElementById("root")!).render(
             }
           >
             <Routes>
-              <Route path="/admin/*" element={<Admin />} />
               <Route element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="about" element={<About />} />
@@ -113,10 +111,6 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="insights/:slug" element={<Detail article />} />
                 <Route path="partners" element={<Partners />} />
                 <Route path="stories/:slug" element={<Story />} />
-                <Route
-                  path="newsletter/:action"
-                  element={<NewsletterAction />}
-                />
                 <Route path="contact" element={<Contact />} />
                 <Route path="privacy" element={<Legal />} />
                 <Route path="cookies" element={<Legal cookies />} />
