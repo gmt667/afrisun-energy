@@ -62,7 +62,7 @@ test("contact and newsletter forms prepare email drafts", async ({ page }) => {
   ).toBeEnabled();
   await expect(
     page.locator('.contact-detail a[href^="mailto:"]'),
-  ).toHaveCount(4);
+  ).toHaveCount(5);
   await expect(
     page.getByText("This static site prepares a message in your email app."),
   ).toBeVisible();
