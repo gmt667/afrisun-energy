@@ -32,7 +32,6 @@ import {
   ScrollHint,
   ContentCard,
 } from "../components";
-import { useApi } from "../lib";
 import type { Content } from "../../shared/schemas";
 import { SEO } from "../seo";
 import { categories } from "../../shared/content";
@@ -60,22 +59,14 @@ const chain = [
   { icon: Store, name: "Retailers", label: "Local market access" },
   { icon: Users, name: "End users", label: "Everyday opportunity" },
 ];
+const homeContent = (): {
+  hero?: Content;
+  intro?: Content;
+  featured: Content[];
+} => ({ featured: [] });
 export default function Home() {
   const reduced = useReducedMotion();
-  const { data: homepage } = useApi<{ items: Content[] }>(
-    "/api/content?kind=homepage",
-    { items: [] },
-  );
-  const { data: companyContent } = useApi<{ items: Content[] }>(
-    "/api/content?kind=company",
-    { items: [] },
-  );
-  const { data: featured } = useApi<{ items: Content[] }>(
-    "/api/content?kind=product&featured=true",
-    { items: [] },
-  );
-  const hero = homepage.items.find((x) => x.slug === "hero");
-  const intro = companyContent.items.find((x) => x.slug === "introduction");
+  const { hero, intro, featured } = homeContent();
   return (
     <>
       <SEO title="Powering Africa’s Future" />
@@ -319,9 +310,9 @@ export default function Home() {
             Proposed product categories. Specific products, brands and
             availability will be published following verification.
           </p>
-          {featured.items.length > 0 && (
+          {featured.length > 0 && (
             <div className="three-grid featured-products">
-              {featured.items.slice(0, 3).map((item) => (
+              {featured.slice(0, 3).map((item) => (
                 <ContentCard key={item.id} item={item} />
               ))}
             </div>

@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { contentSchema } from "../shared/schemas";
 import { safeExternalUrl } from "../shared/enhancements";
-import { publicContent } from "../server/public-content";
 const published = {
   slug: "verified-record",
   title: "Verified record",
@@ -138,7 +137,7 @@ describe("enhanced publication rules", () => {
         details: {
           evidence: "Test",
           video: {
-            url: "/media/aaaa.mp4",
+            url: "/videos/aaaa.mp4",
             location: "Test",
             attribution: "Test",
             mediaPermission: true,
@@ -153,8 +152,8 @@ describe("enhanced publication rules", () => {
         details: {
           evidence: "Test",
           video: {
-            url: "/media/aaaa.mp4",
-            captions: "/media/aaaa.vtt",
+            url: "/videos/aaaa.mp4",
+            captions: "/captions/aaaa.vtt",
             transcript: "Approved transcript",
             location: "Test",
             attribution: "Test",
@@ -209,19 +208,6 @@ describe("enhanced publication rules", () => {
   ])("rejects unsafe source URL %s", (url) =>
     expect(safeExternalUrl(url)).toBe(false),
   );
-  it("redacts private approval evidence from public responses", () => {
-    const record = publicContent({
-      approvedBy: "private-user",
-      approvedAt: new Date(),
-      details: {
-        evidence: "Private permission documents",
-        market: { countryCode: "ZAF", type: "planned", locations: "Test" },
-      },
-    });
-    expect(JSON.stringify(record)).not.toContain("private-user");
-    expect(record.details.evidence).toBe("");
-    expect(record.details.market?.type).toBe("planned");
-  });
   it("uses a complete, sourced local map including African island states", () => {
     const map = JSON.parse(readFileSync("public/maps/africa.json", "utf8"));
     expect(map.source).toBe("Natural Earth 1:50m admin 0");

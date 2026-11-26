@@ -11,16 +11,13 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
         text="Prepared for Afrisun Energy’s South African operations. This notice requires company and legal review before public launch."
       />
       <article className="container legal-copy section">
-        <p>Last updated: 14 November 2026</p>
+        <p>Last updated: 26 November 2026</p>
         {cookies ? (
           <>
             <h2>Essential technology only</h2>
             <p>
-              The public website does not use analytics, advertising or
-              marketing cookies. Administrators use an essential, secure session
-              cookie called <code>afrisun_session</code> to authenticate to the
-              content management system. It expires after eight hours or on
-              sign-out.
+              This static website does not use analytics, advertising,
+              marketing, login or session cookies.
             </p>
             <h2>External services</h2>
             <p>
@@ -31,9 +28,8 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
             </p>
             <h2>Your choices</h2>
             <p>
-              You can block or delete cookies using browser settings. Blocking
-              the essential administration cookie will prevent administrator
-              sign-in. Public content does not require a cookie.
+              You can control cookies and local storage through your browser
+              settings. The public pages do not require an account.
             </p>
             <h2>Future changes</h2>
             <p>
@@ -52,24 +48,20 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
             </p>
             <h2>Information we collect</h2>
             <p>
-              If online forms are enabled, we collect the name, organisation,
-              email address, phone number, enquiry details and, where relevant,
-              delivery country, product interest and quantity that you supply.
-              We record your acknowledgement of this notice and the time of
-              submission. Please do not include identity documents, payment
+              The website does not transmit or store form entries. Selecting
+              “Prepare Email” opens your email application with the details you
+              entered. Afrisun receives those details only if you review and
+              send that email. Your email provider processes the message under
+              its own terms. Please do not include identity documents, payment
               information, health information or other sensitive personal
               information.
             </p>
             <h2>Optional newsletter updates</h2>
             <p>
-              When enabled, newsletter signup stores your email address,
-              selected topics and consent timestamp. An email link must be
-              confirmed within 24 hours before the address becomes subscribed.
-              You can unsubscribe through the link in the confirmation email and
-              every future update. Tokens are stored as hashes. The email
-              provider processes the address to send confirmation. Enquiries do
-              not subscribe you to newsletters. Pending and unsubscribed records
-              remain subject to the company-approved retention policy.
+              The updates section prepares an email request in your email
+              application. You are not subscribed unless Afrisun receives and
+              separately confirms your request. The website keeps no mailing
+              list.
             </p>
             <h2>Why we use it</h2>
             <p>
@@ -80,21 +72,18 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
             </p>
             <h2>Storage and service providers</h2>
             <p>
-              Enquiries are stored in the company’s configured database. When
-              configured, a transactional email provider receives enquiry
-              details to notify the company. Hosting, database and email
-              providers may process data outside South Africa. Before launch,
-              Afrisun must confirm its processors, hosting locations and
-              appropriate safeguards under POPIA, including requirements for
-              cross-border transfers.
+              The site is delivered as static files. Its hosting provider may
+              process routine connection information. If you send an email,
+              your email provider and Afrisun’s mail provider process that
+              message. Loading the optional area map also shares connection
+              information with OpenStreetMap. Afrisun should confirm provider
+              locations and any cross-border safeguards before launch.
             </p>
             <h2>Retention and protection</h2>
             <p>
-              Access to enquiry records is restricted to authorised
-              administrators. Afrisun must approve and implement its retention
-              and deletion schedule before launch. Personal data should be kept
-              only as long as necessary for the stated purpose, contractual
-              obligations or applicable legal requirements.
+              The static website does not retain submitted details. Afrisun is
+              responsible for protecting and deleting messages it receives
+              under its approved retention schedule.
             </p>
             <h2>Your rights and requests</h2>
             <p>

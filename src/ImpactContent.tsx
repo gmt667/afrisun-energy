@@ -1,7 +1,6 @@
-import { useId, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useState, type KeyboardEvent } from "react";
 import { MapPin, ArrowUpRight, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useApi } from "./lib";
 import { Eyebrow, Markdown, Reveal, Notice } from "./components";
 import {
   detailsOf,
@@ -9,9 +8,9 @@ import {
   type ContentDetails,
 } from "../shared/enhancements";
 import countries from "../shared/africa-countries.json" with { type: "json" };
-import type { Content } from "../shared/schemas";
 import branches from "../shared/branches.json";
 import { motion, useReducedMotion } from "motion/react";
+import { publicContent } from "../shared/public-content";
 type Boundary = { code: string; name: string; region: string; path: string };
 type Market = {
   id: string;
@@ -33,11 +32,8 @@ const hq: Market = {
 };
 export function Footprint() {
   const reduced = useReducedMotion();
-  const { data, error } = useApi<{ items: Content[] }>(
-    "/api/content?kind=market&limit=100",
-    { items: [] },
-  );
-  const { data: map, error: mapError } = useApi<{
+  const marketsContent = publicContent.markets;
+  const [map, setMap] = useState<{
     viewBox: string;
     countries: Boundary[];
     branches?: {
@@ -47,17 +43,27 @@ export function Footprint() {
       point: number[];
       approximate: boolean;
     }[];
-  }>("/maps/africa.json", {
+  }>({
     viewBox: "0 0 640 580",
     countries: [],
     branches: [],
   });
+  const [mapError, setMapError] = useState(false);
+  useEffect(() => {
+    fetch("/maps/africa.json")
+      .then((response) => {
+        if (!response.ok) throw new Error("Map asset unavailable");
+        return response.json();
+      })
+      .then(setMap)
+      .catch(() => setMapError(true));
+  }, []);
   const [region, setRegion] = useState("All regions");
   const [selected, setSelected] = useState("ZAF");
   const [countryFilter, setCountryFilter] = useState("All countries");
   const [hovered, setHovered] = useState("");
   const id = useId().replaceAll(":", "");
-  const verified = data.items
+  const verified = marketsContent
     .filter((x) => x.status === "published" && x.verified && !x.demo)
     .flatMap((x) => {
       const market = detailsOf(x).market;
@@ -498,12 +504,6 @@ export function Footprint() {
                 </div>
               )}
             </div>
-            {error && (
-              <p className="fine-print" role="status">
-                Additional market updates are temporarily unavailable. Our
-                company branch network is shown.
-              </p>
-            )}
           </div>
         </div>
       </div>
@@ -511,11 +511,7 @@ export function Footprint() {
   );
 }
 export function CaseStudies() {
-  const { data } = useApi<{ items: Content[] }>(
-    "/api/content?kind=case-study",
-    { items: [] },
-  );
-  const items = data.items.filter(
+  const items = publicContent.caseStudies.filter(
     (x) => x.status === "published" && x.verified && !x.demo,
   );
   return (

@@ -1,24 +1,13 @@
 import { useParams, Link } from "react-router-dom";
-import { useApi } from "../lib";
-import type { Content } from "../../shared/schemas";
 import { detailsOf } from "../../shared/enhancements";
+import { publicContent } from "../../shared/public-content";
 import { SEO } from "../seo";
 import { Eyebrow, PageHero, Button, PartnershipCTA } from "../components";
 import { StoryNarrative } from "../ContentDetails";
 export default function Story() {
   const { slug } = useParams();
-  const {
-    data: record,
-    loading,
-    error,
-  } = useApi<Content | null>(`/api/content/case-study/${slug}`, null);
-  if (loading)
-    return (
-      <div className="container section loading" role="status">
-        Loading story…
-      </div>
-    );
-  if (error || !record)
+  const record = publicContent.caseStudies.find((item) => item.slug === slug);
+  if (!record)
     return (
       <>
         <SEO title="Story unavailable" noindex />

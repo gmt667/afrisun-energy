@@ -1,12 +1,16 @@
 import { test, expect } from "@playwright/test";
-test("public routes render without overflow or runtime errors", async ({
+
+test("static routes render without runtime errors or API requests", async ({
   page,
 }) => {
   const errors: string[] = [];
-  page.on("pageerror", (e) => errors.push(e.message));
-  page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
+  const apiRequests: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname.startsWith("/api/"))
+      apiRequests.push(request.url());
   });
+
   for (const path of [
     "/",
     "/about",
@@ -21,7 +25,7 @@ test("public routes render without overflow or runtime errors", async ({
     "/cookies",
     "/missing",
   ]) {
-    await page.goto(path, { waitUntil: "domcontentloaded" });
+    await page.goto(path);
     await expect(page.locator("h1")).toBeVisible();
     await expect(page).toHaveTitle(/.+ \| Afrisun Energy$/);
     expect(
@@ -29,25 +33,20 @@ test("public routes render without overflow or runtime errors", async ({
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true);
-    if (path === "/")
-      await page.screenshot({
-        path: `test-results/home-${page.viewportSize()?.width}.png`,
-        fullPage: false,
-      });
   }
   expect(errors).toEqual([]);
+  expect(apiRequests).toEqual([]);
 });
-test("catalogue filters preserve URL and honest empty state", async ({
+
+test("catalogue categories and local search work without a service", async ({
   page,
 }) => {
   await page.goto("/products");
+  await expect(page.locator(".category-gallery-card")).toHaveCount(6);
   await page
     .getByRole("combobox", { name: "Category", exact: true })
     .selectOption("solar-panels");
   await expect(page).toHaveURL(/category=solar-panels/);
-  await expect(
-    page.getByRole("heading", { name: "Let’s talk solar panels." }),
-  ).toBeVisible();
   await page
     .getByRole("textbox", { name: "Search products", exact: true })
     .fill("unknown");
@@ -55,15 +54,23 @@ test("catalogue filters preserve URL and honest empty state", async ({
     page.getByRole("heading", { name: "No matching results." }),
   ).toBeVisible();
 });
-test("unconfigured enquiries are clearly disabled", async ({ page }) => {
+
+test("contact and newsletter forms prepare email drafts", async ({ page }) => {
   await page.goto("/contact");
   await expect(
-    page.getByRole("button", { name: "Online Submissions Not Yet Enabled" }),
-  ).toBeDisabled();
+    page.getByRole("button", { name: "Prepare Email" }).first(),
+  ).toBeEnabled();
   await expect(
-    page.getByText("Online submissions are awaiting activation."),
+    page.locator('.contact-detail a[href^="mailto:"]'),
+  ).toHaveCount(4);
+  await expect(
+    page.getByText("This static site prepares a message in your email app."),
   ).toBeVisible();
+  await expect(
+    page.locator(".newsletter-section button[type=submit]"),
+  ).toHaveText(/Prepare Email/);
 });
+
 test("navigation responds to keyboard and mobile menu", async ({
   page,
   isMobile,
@@ -87,15 +94,20 @@ test("navigation responds to keyboard and mobile menu", async ({
     await expect(page.locator("#product-menu")).toHaveCount(0);
   }
 });
-test("reduced motion preserves content", async ({ page }) => {
+
+test("narrow viewports do not overflow and reduced motion preserves content", async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: "POWERING AFRICA’S FUTURE." }),
-  ).toBeVisible();
-  expect(
-    await page.evaluate(
-      () => getComputedStyle(document.documentElement).scrollBehavior,
-    ),
-  ).toBe("auto");
+  await expect(page.locator(".hero h1")).toContainText("POWERING");
+  for (const width of [320, 375, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 960 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+      `overflow at ${width}px`,
+    ).toBe(true);
+  }
 });

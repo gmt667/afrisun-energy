@@ -24,8 +24,8 @@ import {
   socialLinks,
 } from "../shared/content";
 import { detailsOf } from "../shared/enhancements";
-import { useApi } from "./lib";
 import type { Content } from "../shared/schemas";
+import { publicContent } from "../shared/public-content";
 
 export function Logo() {
   return (
@@ -445,10 +445,7 @@ export function ContentCard({ item }: { item: Content }) {
   );
 }
 export function LatestInsights() {
-  const { data, error } = useApi<{ items: Content[] }>(
-    "/api/content?kind=article",
-    { items: [] },
-  );
+  const items = publicContent.articles;
   return (
     <section className="section">
       <div className="container">
@@ -463,14 +460,9 @@ export function LatestInsights() {
             All insights <ArrowUpRight size={18} />
           </Link>
         </div>
-        {error ? (
-          <Notice
-            title="Insights are temporarily unavailable"
-            text="Please try again shortly."
-          />
-        ) : data.items.length ? (
+        {items.length ? (
           <div className="three-grid">
-            {data.items.slice(0, 3).map((x) => (
+            {items.slice(0, 3).map((x) => (
               <ContentCard key={x.id} item={x} />
             ))}
           </div>

@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Pause, Play, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useApi } from "./lib";
 import { Eyebrow } from "./components";
-import { detailsOf } from "../shared/enhancements";
-import type { Content } from "../shared/schemas";
 const roles = [
   ["PV manufacturers", "Solar technology"],
   ["Lithium systems", "Energy storage"],
@@ -14,21 +11,8 @@ const roles = [
   ["Logistics & distribution", "Supply-chain connections"],
 ];
 export function PartnerTicker() {
-  const { data } = useApi<{ items: Content[] }>(
-    "/api/content?kind=network-partner&limit=100",
-    { items: [] },
-  );
   const [paused, setPaused] = useState(false);
-  const verified = data.items.filter(
-    (x) =>
-      x.status === "published" &&
-      x.verified &&
-      !x.demo &&
-      detailsOf(x).network?.namePermission,
-  );
-  const items = verified.length
-    ? verified.map((x) => [x.title, detailsOf(x).network!.role])
-    : roles;
+  const items = roles;
   return (
     <section
       className={`partner-network ${paused ? "ticker-paused" : ""}`}
@@ -44,9 +28,7 @@ export function PartnerTicker() {
               <em>partner network.</em>
             </h2>
             <p>
-              {verified.length
-                ? "Approved organisations across the renewable energy supply chain."
-                : "The connections we seek across solar, storage and last-mile retail. Sector roles, rather than named partnerships."}
+              "The connections we seek across solar, storage and last-mile retail. Sector roles, rather than named partnerships."
             </p>
           </div>
           <div className="network-actions">

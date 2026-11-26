@@ -22,8 +22,6 @@ export const enquirySchema = z
     consent: z.literal(true, {
       error: "Please acknowledge the privacy notice",
     }),
-    website: z.string().max(0).default(""),
-    startedAt: z.number(),
   })
   .superRefine((value, ctx) => {
     if (value.kind !== "contact" && !value.country)
@@ -45,10 +43,6 @@ export const enquirySchema = z
         message: "Choose an enquiry category",
       });
   });
-export const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(12).max(128),
-});
 export const contentSchema = z
   .object({
     kind: z.enum([
@@ -74,12 +68,12 @@ export const contentSchema = z
     model: z.string().max(160).default(""),
     image: z
       .string()
-      .regex(/^$|^\/media\/[a-f0-9-]+\.(webp|pdf)$/)
+      .regex(/^$|^\/images\/[a-z0-9/_-]+\.(webp|png|jpe?g)$/i)
       .default(""),
     imageAlt: z.string().max(300).default(""),
     datasheet: z
       .string()
-      .regex(/^$|^\/media\/[a-f0-9-]+\.pdf$/)
+      .regex(/^$|^\/documents\/[a-z0-9/_-]+\.pdf$/i)
       .default(""),
     status: z
       .enum(["draft", "review", "published", "archived"])

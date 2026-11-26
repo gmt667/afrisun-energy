@@ -999,36 +999,6 @@
 .newsletter-confirm .form-error {
   margin-top: 25px;
 }
-.structured-fields {
-  background: white;
-  margin-top: 25px;
-  padding: 30px;
-}
-.structured-fields h2 {
-  font-size: 25px;
-  margin-bottom: 15px;
-}
-.structured-fields > p {
-  font-size: 12px;
-}
-.admin-main .structured-fields .form-grid {
-  padding: 0;
-}
-.structured-fields h3 {
-  font-size: 19px;
-  margin-top: 25px;
-}
-.claim-editor {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
-  gap: 12px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--line);
-}
-.claim-editor .text-link {
-  grid-column: 1/-1;
-  justify-self: start;
-}
 .metric-private-preview {
   background: var(--off);
   padding: 25px;
@@ -1385,15 +1355,6 @@
   .newsletter-email button {
     font-size: 11px;
     gap: 12px;
-  }
-  .structured-fields {
-    padding: 22px;
-  }
-  .claim-editor {
-    grid-template-columns: 1fr 1fr;
-  }
-  .claim-editor .form-field:first-child {
-    grid-column: 1/-1;
   }
 }
 @media (min-width: 1600px) {

@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "motion/react";
 import { House, Sun, Store, HeartPulse, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useApi } from "./lib";
 import { Eyebrow, Reveal } from "./components";
 import { detailsOf, type ContentDetails } from "../shared/enhancements";
-import type { Content } from "../shared/schemas";
+import { publicContent } from "../shared/public-content";
 const pillars = [
   {
     key: "households",
@@ -76,11 +75,7 @@ function Counter({
   );
 }
 export function ImpactDashboard() {
-  const { data, error } = useApi<{ items: Content[] }>(
-    "/api/content?kind=metric",
-    { items: [] },
-  );
-  const metrics = data.items
+  const metrics = publicContent.metrics
     .filter((x) => x.status === "published" && x.verified && !x.demo)
     .map((item) => ({ item, metric: detailsOf(item).metric }))
     .filter((x) => x.metric && x.metric.value !== null);
@@ -190,11 +185,9 @@ export function ImpactDashboard() {
         </div>
         <div className="impact-footnote">
           <p>
-            {error
-              ? "Verified measurements are temporarily unavailable. Our intended impact areas are shown above."
-              : metrics.length
-                ? "Published measurements are supported by company-reviewed data. They do not represent results achieved by Mission 300."
-                : "We will publish company results when measurement methods and supporting data have been verified. No illustrative figures are presented as achievements."}
+            {metrics.length
+              ? "Published measurements are supported by company-reviewed data. They do not represent results achieved by Mission 300."
+              : "We will publish company results when measurement methods and supporting data have been verified. No illustrative figures are presented as achievements."}
           </p>
           <Link className="text-link" to="/sustainability">
             Our sustainability approach <ArrowUpRight size={16} />

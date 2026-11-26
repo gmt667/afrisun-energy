@@ -2,9 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, ArrowUpRight } from "lucide-react";
 import { Eyebrow, Markdown } from "./components";
-import { useApi } from "./lib";
-import { detailsOf } from "../shared/enhancements";
-import type { Content } from "../shared/schemas";
 const startingAnswers = [
   {
     title: "How do Afrisun’s flexible payment options work?",
@@ -33,23 +30,8 @@ const startingAnswers = [
   },
 ];
 export function FrequentlyAskedQuestions() {
-  const { data } = useApi<{ items: Content[] }>(
-    "/api/content?kind=faq&limit=100",
-    {
-      items: [],
-    },
-  );
   const [filter, setFilter] = useState("All Questions");
-  const approved = data.items.filter(
-    (x) => x.status === "published" && x.verified && !x.demo,
-  );
-  const faqs = approved.length
-    ? approved.map((x) => ({
-        title: x.title,
-        body: x.body,
-        group: detailsOf(x).faq?.group || "Partnership Criteria",
-      }))
-    : startingAnswers;
+  const faqs = startingAnswers;
   return (
     <section className="section faq-section">
       <div className="container faq-layout">
