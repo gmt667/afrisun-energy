@@ -123,7 +123,7 @@ export function EnquiryForm({
           <AlertCircle size={20} />
           <p>
             Online submissions are awaiting activation. Please{" "}
-            <a href={`mailto:${company.email}`}>email</a> or{" "}
+            <a href={`mailto:${company.emails.join(",")}`}>email</a> or{" "}
             <a href="tel:+27635483486">call Afrisun</a> directly.
           </p>
         </div>

@@ -226,18 +226,19 @@
 }
 .footer-social {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   width: 100%;
-  max-width: 304px;
-  gap: 6px;
+  max-width: 360px;
+  gap: 8px 12px;
   margin-top: 24px;
 }
 .footer-social a {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 7px;
   color: #bacad6;
-  font-size: 12px;
+  font-size: 11px;
   min-height: 44px;
   border-radius: 0;
   background: transparent;
@@ -246,8 +247,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
   background: transparent;
 }

@@ -1,7 +1,13 @@
 export const company = {
   name: "Afrisun Energy (Pty) Ltd",
   tagline: "Powering Africa’s Future",
-  email: "Mfumu.kuseni@afrisun.za",
+  email: "mfumu@afrisunenergy.co.za",
+  emails: [
+    "mfumu@afrisunenergy.co.za",
+    "anne@afrisunenergy.co.za",
+    "bester@afrisunenergy.co.za",
+    "admin@afrisunenergy.co.za",
+  ],
   phone: "+27 63 548 3486",
   address: "1 Lawnmarket Road, Morningside Villas, Sandton, 2196, South Africa",
   registration: "2026/231724/07",

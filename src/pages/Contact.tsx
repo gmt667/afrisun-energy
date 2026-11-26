@@ -72,7 +72,12 @@ export default function Contact() {
               <Mail />
               <div>
                 <h3>Email us</h3>
-                <a href={`mailto:${company.email}`}>{company.email}</a>
+                {company.emails.map((email, index) => (
+                  <span key={email}>
+                    {index > 0 && <br />}
+                    <a href={`mailto:${email}`}>{email}</a>
+                  </span>
+                ))}
               </div>
             </div>
             <div className="contact-detail">

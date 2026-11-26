@@ -5,6 +5,7 @@ import { useApi, api } from "./lib";
 import { newsletterSchema } from "../shared/newsletter";
 import { SEO } from "./seo";
 import { PageHero } from "./components";
+import { company } from "../shared/content";
 export function Newsletter() {
   const { data: config } = useApi("/api/config", { newsletterEnabled: false });
   const [result, setResult] = useState("");
@@ -122,7 +123,7 @@ export function Newsletter() {
             {!config.newsletterEnabled && (
               <p className="newsletter-note">
                 Signup is awaiting activation.{" "}
-                <a href="mailto:Mfumu.kuseni@afrisun.za">Contact Afrisun</a> to
+                <a href={`mailto:${company.email}`}>Contact Afrisun</a> to
                 discuss updates.
               </p>
             )}
