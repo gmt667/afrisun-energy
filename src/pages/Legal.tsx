@@ -100,7 +100,12 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
             <p>
               You may request access, correction or deletion of your
               information, object to applicable processing or raise a concern by
-              contacting <a href={`mailto:${company.email}`}>{company.email}</a>
+              contacting {company.emails.map((email, index) => (
+                <span key={email}>
+                  {index > 0 && ", "}
+                  <a href={`mailto:${email}`}>{email}</a>
+                </span>
+              ))}
               . We may need to verify your identity before acting on a request.
               You may also contact South Africa’s Information Regulator at{" "}
               <a
@@ -123,8 +128,12 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
         )}
         <h2>Contact</h2>
         <p>
-          <a href={`mailto:${company.email}`}>{company.email}</a>
-          <br />
+          {company.emails.map((email) => (
+            <span key={email}>
+              <a href={`mailto:${email}`}>{email}</a>
+              <br />
+            </span>
+          ))}
           <a href="tel:+27635483486">{company.phone}</a>
         </p>
       </article>

@@ -398,6 +398,10 @@ export function createApp() {
       let emailStatus = "unconfigured";
       if (process.env.RESEND_API_KEY && process.env.EMAIL_FROM) {
         try {
+          const configuredRecipients = process.env.EMAIL_TO
+            ?.split(",")
+            .map((email) => email.trim())
+            .filter(Boolean);
           const response = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {
@@ -407,7 +411,9 @@ export function createApp() {
             },
             body: JSON.stringify({
               from: process.env.EMAIL_FROM,
-              to: [process.env.EMAIL_TO || company.email],
+              to: configuredRecipients?.length
+                ? configuredRecipients
+                : company.emails,
               reply_to: data.email,
               subject: `Afrisun ${data.kind} enquiry ${record.id}`,
               text: Object.entries(fields)

@@ -11,7 +11,7 @@ Use a Node 22 container/service and a managed PostgreSQL 15+ database. Serve the
 5. Mount a persistent writable volume at `UPLOAD_DIR`. Back up both PostgreSQL and media; test restoration. The application must not run as root. The Dockerfile creates a non-root user.
 6. Create the first administrator via `npm run admin:create` in a secure maintenance environment. Clear `ADMIN_PASSWORD` afterwards.
 7. Review image rights, approved product/article data, legal documents and company ownership before making the site public.
-8. Configure verified Resend sending domain, `EMAIL_FROM`, `RESEND_API_KEY`, and `EMAIL_TO`. Test delivery to the company inbox. Set `ENQUIRIES_ENABLED=true` only when the team is ready to monitor stored enquiries and respond.
+8. Configure verified Resend sending domain, `EMAIL_FROM`, `RESEND_API_KEY`, and optional comma-separated `EMAIL_TO` recipients. Without `EMAIL_TO`, enquiry notifications go to the four company contact addresses in `shared/content.ts`. Test delivery to the company inbox. Set `ENQUIRIES_ENABLED=true` only when the team is ready to monitor stored enquiries and respond.
 9. Run real database-backed acceptance checks before release: sign in as admin/editor, upload an image/PDF, publish/unpublish an article and a product, schedule a future article, submit each form type, confirm records, confirm notification status, verify role boundaries, CSV export, user disable and logout. Use isolated test records and delete personal test data under the approved retention process.
 
 ## Docker

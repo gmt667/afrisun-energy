@@ -256,7 +256,7 @@ export function Footer() {
                     height="24"
                   />
                 </span>
-                <span className="sr-only">{name}</span>
+                <span>{name === "LinkedIn search" ? "LinkedIn" : name}</span>
               </a>
             ))}
           </nav>
@@ -297,10 +297,12 @@ export function Footer() {
             <Phone size={15} />
             {company.phone}
           </a>
-          <a href={`mailto:${company.email}`}>
-            <Mail size={15} />
-            {company.email}
-          </a>
+          {company.emails.map((email, index) => (
+            <a href={`mailto:${email}`} key={email}>
+              {index === 0 && <Mail size={15} />}
+              {email}
+            </a>
+          ))}
           <Link to="/contact">
             View office details <ArrowUpRight size={14} />
           </Link>

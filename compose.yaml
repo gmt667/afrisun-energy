@@ -25,7 +25,7 @@ services:
       NEWSLETTER_ENABLED: ${NEWSLETTER_ENABLED:-false}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
-      EMAIL_TO: ${EMAIL_TO:-Mfumu.kuseni@afrisun.za}
+      EMAIL_TO: ${EMAIL_TO:-mfumu@afrisunenergy.co.za,anne@afrisunenergy.co.za,bester@afrisunenergy.co.za,admin@afrisunenergy.co.za}
     ports:
       - "127.0.0.1:3001:3001"
     volumes:
