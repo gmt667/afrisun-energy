@@ -14,7 +14,7 @@ export function Newsletter() {
       "I have read the privacy notice and agree to receive these updates.",
     ].join("\n");
     window.open(
-      `mailto:${company.emails.join(",")}?${new URLSearchParams({ subject, body })}`,
+      `mailto:${company.email}?${new URLSearchParams({ subject, body })}`,
       "_self",
     );
   }

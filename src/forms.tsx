@@ -43,7 +43,7 @@ export function EnquiryForm({
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
     window.open(
-      `mailto:${company.emails.join(",")}?${new URLSearchParams({ subject, body })}`,
+      `mailto:${company.email}?${new URLSearchParams({ subject, body })}`,
       "_self",
     );
   });
@@ -87,7 +87,7 @@ export function EnquiryForm({
         <AlertCircle size={20} />
         <p>
           This static site prepares a message in your email app. You can also{" "}
-          <a href={`mailto:${company.emails.join(",")}`}>email us directly</a>.
+          <a href={`mailto:${company.email}`}>email us directly</a>.
         </p>
       </div>
       <div className="form-grid">
