@@ -2,6 +2,7 @@ export const company = {
   name: "Afrisun Energy (Pty) Ltd",
   tagline: "Powering Africa’s Future",
   email: "info@afrisunenergy.co.za",
+  contactEmail: "admin@afrisunenergy.co.za",
   emails: [
     "info@afrisunenergy.co.za",
     "mfumu@afrisunenergy.co.za",

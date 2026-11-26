@@ -31,6 +31,7 @@ export function EnquiryForm({
       interest: params.get("interest") || "",
     },
   });
+  const recipient = kind === "contact" ? company.contactEmail : company.email;
   const submit = handleSubmit((values) => {
     const subject =
       kind === "quote"
@@ -43,7 +44,7 @@ export function EnquiryForm({
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
     window.open(
-      `mailto:${company.email}?${new URLSearchParams({ subject, body })}`,
+      `mailto:${recipient}?${new URLSearchParams({ subject, body })}`,
       "_self",
     );
   });
@@ -87,7 +88,7 @@ export function EnquiryForm({
         <AlertCircle size={20} />
         <p>
           This static site prepares a message in your email app. You can also{" "}
-          <a href={`mailto:${company.email}`}>email us directly</a>.
+          <a href={`mailto:${recipient}`}>email us directly</a>.
         </p>
       </div>
       <div className="form-grid">
