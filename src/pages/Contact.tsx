@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   MapPin,
   Phone,
+  MessageCircle,
   Mail,
   Clock,
   Copy,
@@ -65,7 +66,27 @@ export default function Contact() {
               <Phone />
               <div>
                 <h3>Call us</h3>
-                <a href="tel:+27635483486">{company.phone}</a>
+                <a href={`tel:${company.phone.replace(/\D/g, "")}`}>
+                  {company.phone}
+                </a>
+              </div>
+            </div>
+            <div className="contact-detail">
+              <MessageCircle />
+              <div>
+                <h3>WhatsApp</h3>
+                {company.whatsappNumbers.map((number) => (
+                  <span key={number}>
+                    <a
+                      href={`https://wa.me/${number.replace(/\D/g, "")}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {number}
+                    </a>
+                    <br />
+                  </span>
+                ))}
               </div>
             </div>
             <div className="contact-detail">

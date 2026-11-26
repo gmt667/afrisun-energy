@@ -153,7 +153,54 @@
   border-color: #40515e;
 }
 :root[data-theme="dark"] .site-header .logo {
+  color: #e7edf3;
+}
+:root[data-theme="dark"] .button-navy,
+:root[data-theme="dark"] .back-top,
+:root[data-theme="dark"] .hero,
+:root[data-theme="dark"] .mission-strip,
+:root[data-theme="dark"] .supply-section,
+:root[data-theme="dark"] .category-card,
+:root[data-theme="dark"] .lightbox,
+:root[data-theme="dark"] .impact-photo,
+:root[data-theme="dark"] .page-hero-image,
+:root[data-theme="dark"] .goals-section,
+:root[data-theme="dark"] .impact-dashboard,
+:root[data-theme="dark"] .story-image-type,
+:root[data-theme="dark"] .video-stories,
+:root[data-theme="dark"] .region-filters button[aria-pressed="true"] {
+  background-color: #102b46;
+}
+:root[data-theme="dark"] .button-navy,
+:root[data-theme="dark"] .region-filters button[aria-pressed="true"] {
+  border-color: #102b46;
+  color: #fff;
+}
+:root[data-theme="dark"] .button-gold,
+:root[data-theme="dark"] .skip-link,
+:root[data-theme="dark"] .sdg-number {
   color: #102b46;
+}
+:root[data-theme="dark"] .legal-copy a,
+:root[data-theme="dark"] .text-link:hover {
+  color: #8bd9ba;
+}
+:root[data-theme="dark"] .button-gold,
+:root[data-theme="dark"] .nav-cta {
+  color: #102b46;
+}
+:root[data-theme="dark"] .image-note > span {
+  color: #fff;
+}
+:root[data-theme="dark"] .global-goal > span {
+  color: #8bd9ba;
+}
+:root[data-theme="dark"] .map-placeholder {
+  background: #1a2732;
+  color: #dce6ed;
+}
+:root[data-theme="dark"] .map-placeholder p {
+  color: #d5e0e7;
 }
 :root[data-theme="dark"] ::placeholder {
   color: #aebdc8;
@@ -2114,6 +2161,12 @@ footer {
 }
 .footer-contact a {
   overflow-wrap: anywhere;
+}
+.footer-whatsapp > a {
+  display: block;
+  margin: 6px 0 0 25px;
+  color: #bacad6;
+  font-size: 11px;
 }
 .footer-contact svg {
   flex-shrink: 0;

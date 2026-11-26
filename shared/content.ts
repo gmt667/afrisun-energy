@@ -8,14 +8,19 @@ export const company = {
     "bester@afrisunenergy.co.za",
     "admin@afrisunenergy.co.za",
   ],
-  phone: "+27 63 548 3486",
+  phone: "+27 63 508 6630",
+  whatsappNumbers: [
+    "+27 63 508 6630",
+    "+265 993 86 95 53",
+    "+265 882 27 22 97",
+  ],
   address: "1 Lawnmarket Road, Morningside Villas, Sandton, 2196, South Africa",
   registration: "2026/231724/07",
 };
 export const socialLinks = [
   {
     name: "WhatsApp",
-    url: "https://wa.me/27635483486",
+    url: "https://wa.me/27635086630",
     icon: "whatsapp.svg",
     label: "Chat with Afrisun Energy on WhatsApp",
   },

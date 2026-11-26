@@ -123,7 +123,9 @@ export default function Legal({ cookies = false }: { cookies?: boolean }) {
               <br />
             </span>
           ))}
-          <a href="tel:+27635483486">{company.phone}</a>
+          <a href={`tel:${company.phone.replace(/\D/g, "")}`}>
+            {company.phone}
+          </a>
         </p>
       </article>
     </>

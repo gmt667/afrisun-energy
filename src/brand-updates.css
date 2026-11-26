@@ -158,6 +158,10 @@
 .project-gallery {
   background: var(--off-white, #f6f7f3);
 }
+:root[data-theme="dark"] .project-gallery {
+  background: #141f29;
+  color: #dce6ed;
+}
 .project-photo-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
